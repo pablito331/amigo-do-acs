@@ -18,6 +18,7 @@ import type { Cidadao } from "@/lib/domain";
 
 const navegacao = [
   { caminho: "/", rotulo: "Painel", descricao: "Visão da microárea", icone: BarChart3 },
+  { caminho: "/indicadores", rotulo: "Indicadores", descricao: "Metas e cobertura", icone: BarChart3 },
   { caminho: "/cidadaos", rotulo: "Cidadãos", descricao: "Cadastros e visitas", icone: UsersRound },
   { caminho: "/rotina", rotulo: "Rotina", descricao: "Visitas do dia", icone: CalendarDays },
   { caminho: "/importar", rotulo: "Importar listas", descricao: "CSV do PEC", icone: FileUp },

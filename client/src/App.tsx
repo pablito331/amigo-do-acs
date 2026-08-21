@@ -10,6 +10,7 @@ import Backup from "./pages/Backup";
 import Cidadaos from "./pages/Cidadaos";
 import Home from "./pages/Home";
 import Importar from "./pages/Importar";
+import Indicadores from "./pages/Indicadores";
 import Rotina from "./pages/Rotina";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
     <AppShell>
       <Switch>
         <Route path={"/"} component={Home} />
+        <Route path={"/indicadores"} component={Indicadores} />
         <Route path={"/cidadaos"} component={Cidadaos} />
         <Route path={"/rotina"} component={Rotina} />
         <Route path={"/importar"} component={Importar} />

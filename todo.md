@@ -47,7 +47,7 @@
 - [x] Estender o cidadão consolidado e a importação incremental para preservar as medidas antropométricas disponíveis.
 - [x] Exibir no perfil do cidadão uma seção de medidas e, para crianças, um resumo de crescimento e acompanhamento.
 - [x] Validar a apresentação das medidas em telas móveis, tablet e desktop e criar testes da atualização.
-- [ ] Salvar checkpoint da atualização de medidas antropométricas e filtro de microárea.
+- [x] Salvar checkpoint da atualização de medidas antropométricas e filtro de microárea.
 - [x] Exibir no topo do detalhe do cidadão uma linha compacta de peso, altura e data da última medição, conforme o relatório Geral do PEC.
 - [x] Corrigir o filtro da microárea ativa para restringir painel, cidadãos, prioridades, rotina e relatórios aos registros correspondentes.
 - [x] Permitir selecionar uma microárea diretamente na tela de cidadãos, além da configuração persistente em Ajustes.
@@ -57,3 +57,54 @@
 - [x] Criar um filtro mestre de microárea persistente no cabeçalho global do aplicativo.
 - [x] Fazer o filtro mestre atualizar Painel, Cidadãos, Rotina, prioridades, visitas e relatórios sem exigir filtros adicionais por página.
 - [x] Remover o seletor de microárea redundante da tela de cidadãos e validar o comportamento global em múltiplas telas.
+- [x] Identificar crianças pela idade do cadastro Geral, mesmo sem presença na lista de Desenvolvimento infantil.
+- [x] Atualizar o filtro de crianças para incluir cidadãos menores de 12 anos identificados pelo cadastro Geral.
+- [x] Reestruturar o resumo clínico para apresentar todas as listas temáticas consolidadas, incluindo Geral, sem repetir rótulos genéricos.
+- [x] Criar testes e validar visualmente a classificação infantil e o resumo de grupos no detalhe do cidadão.
+- [x] Identificar crianças pela idade do cadastro Geral, mesmo sem presença na lista de Desenvolvimento infantil.
+- [x] Atualizar o filtro de crianças para incluir cidadãos menores de 12 anos identificados pelo cadastro Geral.
+- [x] Reestruturar o resumo clínico para apresentar todas as listas temáticas consolidadas, incluindo Geral, sem repetir rótulos genéricos.
+- [x] Expandir o detalhe do cidadão logo abaixo do registro selecionado quando o aplicativo estiver em tela de celular.
+- [x] Validar em celular a expansão contextual e o recolhimento do detalhe do cidadão na lista.
+- [x] Criar uma aba dedicada de Indicadores acessível a partir da navegação principal.
+- [x] Exibir gráficos e cartões por microárea para visitas, diabetes, hipertensão, pré-natal e rastreamento.
+- [x] Vincular cada indicador à lista de cidadãos elegíveis para busca ativa.
+- [x] Validar o painel de indicadores em celular, tablet e desktop.
+- [x] Detectar e apresentar possíveis cidadãos duplicados na lista Geral, com critérios explicados e sem excluir dados automaticamente.
+- [x] Disponibilizar o rastreador de duplicidades no painel de indicadores com acesso direto aos registros envolvidos.
+- [x] Consolidar a rotina de visitas para que cada cidadão apareça uma única vez, reunindo hipertensão, diabetes e demais condições relevantes.
+- [x] Permitir criar rotina por dia ou semana, com período selecionado e meta de visitas por dia.
+- [x] Incluir condições relevantes do cidadão, campos de observações e assinatura no relatório imprimível da rotina.
+- [ ] Cobrir a consolidação de rotina e a detecção de duplicidades com testes automatizados e validação visual.
+- [x] Permitir ordenar a lista de cidadãos por nome, prioridade, endereço e acompanhamento, preservando filtros e microárea mestre.
+- [x] Adicionar rolagem interna ao painel de detalhes do cidadão em desktop, sem cortar medidas, prioridades, visita ou histórico.
+- [x] Classificar o IMC de adultos como baixo peso, faixa adequada, sobrepeso ou obesidade, com aviso de apoio à avaliação profissional.
+- [x] Exibir somente o IMC calculado para crianças e adolescentes, sem aplicar a classificação de adultos.
+- [x] Criar testes para as faixas orientativas de IMC adulto.
+- [ ] Abrir o detalhe do cidadão em painel móvel próprio ao tocar no registro, com fechamento claro e acesso às visitas.
+- [ ] Validar a abertura e o fechamento do detalhe de cidadão em tela de celular.
+- [x] Sinalizar o acompanhamento de peso e altura de crianças para o Bolsa Família por recência da medição: verde até 30 dias, amarelo de 31 a 60 dias e vermelho acima de 60 dias ou sem data disponível.
+- [x] Exibir no detalhe infantil as medidas de peso e altura disponíveis na importação, destacando a data mais recente usada na sinalização.
+- [x] Criar testes automatizados para as faixas de recência do acompanhamento antropométrico infantil e validar a apresentação visual.
+- [x] Corrigir a regra de recência do acompanhamento antropométrico infantil para usar exatamente: verde até 30 dias, amarelo de 31 a 60 dias e vermelho acima de 60 dias ou sem data/medida completa.
+- [x] Atualizar os testes automatizados do acompanhamento antropométrico infantil para cobrir explicitamente os limites de 30, 31, 60 e 61 dias.
+- [x] Adicionar um teste automatizado explícito para 31 dias na regra de acompanhamento antropométrico infantil e revalidar a suíte.
+- [x] Criar um ícone próprio, reconhecível em telas pequenas, para a instalação do PWA Amigo do ACS em celulares e computadores.
+- [x] Configurar os ícones de instalação, atalho e máscara do PWA no manifesto e validar a exibição na experiência instalada.
+- [x] Exibir no painel da microárea as visitas registradas localmente no Amigo do ACS por período selecionado.
+- [x] Exibir, separadamente, a recência da última visita domiciliar informada pelo CSV PEC, deixando claro que ela não representa o histórico detalhado de visitas locais.
+- [x] Preservar e testar o histórico local de visitas após uma reimportação de CSV do mesmo cidadão.
+- [x] Importar e exibir por cidadão a recência de atendimento médico, enfermagem e odontológico, além da visita domiciliar, a partir dos campos do CSV PEC.
+- [x] Mostrar o resumo de recências no formato operacional de acompanhamento na lista e no detalhe do cidadão, sem confundir esses dados do PEC com as visitas salvas no Amigo do ACS.
+- [x] Substituir os textos de urgência na lista de cidadãos por uma sinalização simples de cor da prioridade de visita do ACS.
+- [x] Criar teste específico para o resumo clínico/detalhe infantil, cobrindo exibição de grupos consolidados e identificação de criança pelo cadastro Geral.
+- [x] Registrar em documentação a validação em celular da expansão e recolhimento do detalhe do cidadão na lista.
+- [x] Completar a versão imprimível semanal da rotina com campo de observação em branco por cidadão/linha, mantendo também o campo de assinatura do ACS.
+- [x] Registrar e validar visualmente a nova flag antropométrica infantil do Bolsa Família em documentação/capturas verificáveis.
+- [x] Completar o manifesto do PWA com atalhos de instalação e validar a experiência instalada.
+- [x] Adicionar um seletor de período no painel da microárea para filtrar as visitas locais exibidas.
+- [x] Exibir na lista de cidadãos o resumo completo das recências PEC, mantendo distinção do histórico local.
+- [ ] Próxima versão: permitir iniciar uma conversa com o cidadão ao tocar no número de telefone, com escolha explícita do canal disponível.
+- [ ] Próxima versão: exibir notas de versão com itens corrigidos, incluídos e melhorados após cada publicação.
+- [ ] Próxima versão: permitir compartilhar relatórios somente por ação visível e confirmação explícita, exibindo o destinatário e o conteúdo antes do envio.
+- [ ] Aguardar o endereço de e-mail dedicado do usuário antes de configurar qualquer compartilhamento de relatórios.

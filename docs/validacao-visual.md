@@ -35,6 +35,16 @@ O detalhe de cidadão foi validado em **768×1024** com uma prévia isolada de d
 
 Como validação final, os oito CSVs reais compartilhados foram importados em uma janela isolada. Um cidadão real da lista de Desenvolvimento infantil foi selecionado e confirmou visualmente a linha de peso/altura, o IMC estimado e o bloco de acompanhamento infantil. A janela, os arquivos temporários e a dependência usada exclusivamente na automação foram removidos antes da entrega; nenhum dado de cidadão foi preservado no projeto.
 
+## Painel de indicadores
+
+A aba de indicadores foi validada em **1280×900** e **375×812**. Em desktop, o gráfico de cobertura, os cartões de resumo, as orientações e a lista de busca ativa ocupam colunas equilibradas. Em celular, os cartões e o gráfico passam a uma coluna, a navegação inferior preserva o acesso à aba e o detalhamento continua legível sem rolagem horizontal.
+
 ## Medidas antropométricas
 
 Após a inclusão do resumo de peso e altura no detalhe do cidadão, a tela de cidadãos foi verificada em **375×812** e **1280×900**. A estrutura de busca, lista e painel de detalhe preserva o comportamento responsivo. As medidas são exibidas somente após importação de um cidadão que possua os campos no relatório Geral; a validação agregada dos CSVs confirma a disponibilidade desses campos em parte substancial da base.
+
+## Rotina, recências e prioridade por cor
+
+Em **21 de agosto de 2026**, as telas de Cidadãos e Rotina foram verificadas novamente em **1280×720** e **375×812**. A busca, os filtros, a ordenação, o cabeçalho com filtro mestre e a estrutura de detalhe do cidadão permanecem legíveis no celular. O detalhe é expandido abaixo do registro selecionado e pode ser recolhido ao tocar novamente o mesmo registro.
+
+A rotina diária preserva os controles de período e meta em uma única coluna no celular. O relatório semanal mantém as ações de exportar e imprimir, os campos de condições e a tabela com rolagem horizontal quando necessário. A validação visual do conteúdo de recência PEC e prioridade por cor deve ser repetida com uma base PEC real no navegador de uso, pois as capturas finais foram feitas sem registros persistidos nesta janela de validação.

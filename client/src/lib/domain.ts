@@ -25,6 +25,12 @@ export interface Cidadao {
   microarea: string | null;
   telefone: string | null;
   endereco: string | null;
+  diasUltimoAtendimentoMedico: number | null;
+  mesesUltimoAtendimentoMedico: number | null;
+  diasUltimoAtendimentoEnfermagem: number | null;
+  mesesUltimoAtendimentoEnfermagem: number | null;
+  diasUltimoAtendimentoOdontologico: number | null;
+  mesesUltimoAtendimentoOdontologico: number | null;
   mesesUltimaVisitaDomiciliar: number | null;
   diasUltimaVisitaDomiciliar: number | null;
   pesoKg: number | null;

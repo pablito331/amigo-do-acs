@@ -76,6 +76,12 @@ function valoresBase(linha: LinhaCsv): Partial<Cidadao> {
     microarea: normalizarTextoCsv(linha["Microárea"]),
     telefone: normalizarTextoCsv(linha["Telefone de contato"]) ?? normalizarTextoCsv(linha["Telefone celular"]) ?? normalizarTextoCsv(linha["Telefone residencial"]),
     endereco: endereco(linha),
+    diasUltimoAtendimentoMedico: numeroCsv(linha["Dias desde o último atendimento médico"]),
+    mesesUltimoAtendimentoMedico: numeroCsv(linha["Meses desde o último atendimento médico"]),
+    diasUltimoAtendimentoEnfermagem: numeroCsv(linha["Dias desde o último atendimento de enfermagem"]),
+    mesesUltimoAtendimentoEnfermagem: numeroCsv(linha["Meses desde o último atendimento de enfermagem"]),
+    diasUltimoAtendimentoOdontologico: numeroCsv(linha["Dias desde o último atendimento odontológico"]),
+    mesesUltimoAtendimentoOdontologico: numeroCsv(linha["Meses desde o último atendimento odontológico"]),
     mesesUltimaVisitaDomiciliar: numeroCsv(linha["Meses desde a última visita domiciliar"]),
     diasUltimaVisitaDomiciliar: numeroCsv(linha["Dias desde a última visita domiciliar"]),
     pesoKg: numeroCsv(linha["Última medição de peso"]),
@@ -131,7 +137,7 @@ function aplicarLista(base: Cidadao, linha: LinhaCsv, lista: ListaTematica): Cid
 function cidadaoNovo(chave: string): Cidadao {
   return {
     id: crypto.randomUUID(), chave, nome: "Cidadão sem nome", dataNascimento: null, idadeStr: null, sexo: null, cpf: null, cns: null, microarea: null, telefone: null, endereco: null,
-    mesesUltimaVisitaDomiciliar: null, diasUltimaVisitaDomiciliar: null, pesoKg: null, alturaCm: null, dataUltimaMedicaoPesoAltura: null, beneficiarioBolsaFamilia: null, vigenciaBolsaFamilia: null, registrosPesoAltura12Meses: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null,
+    diasUltimoAtendimentoMedico: null, mesesUltimoAtendimentoMedico: null, diasUltimoAtendimentoEnfermagem: null, mesesUltimoAtendimentoEnfermagem: null, diasUltimoAtendimentoOdontologico: null, mesesUltimoAtendimentoOdontologico: null, mesesUltimaVisitaDomiciliar: null, diasUltimaVisitaDomiciliar: null, pesoKg: null, alturaCm: null, dataUltimaMedicaoPesoAltura: null, beneficiarioBolsaFamilia: null, vigenciaBolsaFamilia: null, registrosPesoAltura12Meses: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null,
     isMulher: false, examePreventivoUltimaAvaliacao: null, isGestante: false, igSemanas: null, qtdConsultasPreNatal: null,
     isHipertenso: false, isDiabetico: false, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaHipertensao: null, dataUltimaConsultaDiabetes: null,
     isIdoso: false, isCrianca: false, isSaudeBucal: false, fontes: [], atualizadoEm: Date.now(),

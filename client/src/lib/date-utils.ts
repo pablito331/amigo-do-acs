@@ -31,6 +31,13 @@ export function idadeEmAnos(valor: string | null | undefined, referencia = new D
   return idade;
 }
 
+export function ehCrianca(dataNascimento: string | null | undefined, idadeStr: string | null | undefined, referencia = new Date()): boolean {
+  const idadePorData = idadeEmAnos(dataNascimento, referencia);
+  if (idadePorData !== null) return idadePorData < 12;
+  const idadeInformada = Number(String(idadeStr ?? "").match(/\d+/)?.[0]);
+  return Number.isFinite(idadeInformada) && idadeInformada < 12;
+}
+
 export function formatarData(valor: string | null | undefined): string {
   const data = paraData(valor);
   return data ? new Intl.DateTimeFormat("pt-BR").format(data) : "Não informado";

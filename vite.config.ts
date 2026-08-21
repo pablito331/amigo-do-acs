@@ -166,6 +166,18 @@ const plugins = [
       background_color: "#f5f7fb",
       display: "standalone",
       lang: "pt-BR",
+      icons: [
+        {
+          src: "/manus-storage/amigo-do-acs-app-icon_8a14bc52.png",
+          sizes: "1024x1024",
+          type: "image/png",
+          purpose: "any maskable",
+        },
+      ],
+      shortcuts: [
+        { name: "Cidadãos", short_name: "Cidadãos", description: "Consultar cadastros e recências", url: "/cidadaos", icons: [{ src: "/manus-storage/amigo-do-acs-app-icon_8a14bc52.png", sizes: "1024x1024", type: "image/png" }] },
+        { name: "Rotina", short_name: "Rotina", description: "Planejar visitas do dia", url: "/rotina", icons: [{ src: "/manus-storage/amigo-do-acs-app-icon_8a14bc52.png", sizes: "1024x1024", type: "image/png" }] },
+      ],
     },
     workbox: {
       navigateFallback: "/index.html",

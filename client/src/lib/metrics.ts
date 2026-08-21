@@ -13,6 +13,9 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
   prioridades: Prioridade[];
   indicadores: IndicadorLocal[];
   visitasNoMes: number;
+  visitasNaSemana: number;
+  pecVisitaRecente: number;
+  pecVisitaAtrasada: number;
   domicilios: number;
 } {
   const base = cidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva));
@@ -38,10 +41,23 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
   ];
 
   const enderecos = new Set(base.map((item) => item.endereco?.trim()).filter(Boolean));
+  const hoje = new Date();
+  const inicioSemana = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - ((hoje.getDay() + 6) % 7));
+  const fimDoDia = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 23, 59, 59, 999);
+  const visitasLocaisDaSemana = visitas.filter((item) => {
+    if (!idsDaBase.has(item.cidadaoId)) return false;
+    const data = new Date(`${item.data}T12:00:00`);
+    return data >= inicioSemana && data <= fimDoDia;
+  }).length;
+  const pecVisitaRecente = base.filter((item) => item.diasUltimaVisitaDomiciliar !== null ? item.diasUltimaVisitaDomiciliar <= 30 : item.mesesUltimaVisitaDomiciliar === 0).length;
+  const pecVisitaAtrasada = base.filter((item) => item.mesesUltimaVisitaDomiciliar !== null ? item.mesesUltimaVisitaDomiciliar >= regras.mesesVisitaAtrasada : (item.diasUltimaVisitaDomiciliar ?? 0) > 60).length;
   return {
     prioridades,
     indicadores,
     visitasNoMes: visitas.filter((item) => idsDaBase.has(item.cidadaoId) && estaNoMesAtual(item.data)).length,
+    visitasNaSemana: visitasLocaisDaSemana,
+    pecVisitaRecente,
+    pecVisitaAtrasada,
     domicilios: enderecos.size,
   };
 }
