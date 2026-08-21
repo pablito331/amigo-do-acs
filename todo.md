@@ -157,3 +157,6 @@
 - [x] Oferecer, a partir do dia selecionado, as ações de adicionar visita manualmente e montar agenda automática por prioridades.
 - [x] Manter a impressão da agenda diária e permitir compartilhá-la por WhatsApp com destinatário escolhido e conteúdo visível antes do envio.
 - [x] Exibir, junto da prioridade na lista de cidadãos, a recência da última visita domiciliar informada pelo PEC.
+- [x] Reduzir o destaque visual das visitas registradas no Amigo do ACS no painel, preservando sua consulta sem competir com a busca ativa do PEC.
+- [x] Tornar os cards do painel clicáveis para abrir as listas ou detalhes correspondentes aos números exibidos.
+- [x] Permitir abrir as listas de cidadãos com recência PEC em dia ou em atraso a partir dos números da seção de visitas da microárea.
