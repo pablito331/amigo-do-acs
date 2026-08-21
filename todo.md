@@ -164,3 +164,7 @@
 - [x] Registrar para cada versão as melhorias, correções e recursos entregues de forma clara para o ACS.
 - [x] Permitir compartilhar, a partir do detalhe do cidadão, nome, endereço, microárea e telefone por WhatsApp.
 - [x] Exibir a prévia do resumo do cidadão e solicitar o WhatsApp do destinatário antes de abrir a conversa.
+- [x] Corrigir o loop entre o botão de adicionar cidadão no calendário e o botão de adicionar à agenda no perfil.
+- [x] Permitir escolher uma data e concluir a inclusão manual de um cidadão sem redirecionamentos repetidos.
+- [x] Abrir, no botão Adicionar cidadão do calendário, uma lista pesquisável para escolher o cidadão no próprio dia selecionado.
+- [x] Incluir o cidadão selecionado diretamente na agenda do dia, sem navegar entre as telas Cidadãos e Rotina.
