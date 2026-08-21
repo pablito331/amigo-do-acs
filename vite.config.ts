@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import { VitePWA } from "vite-plugin-pwa";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -150,7 +151,28 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  vitePluginManusRuntime(),
+  VitePWA({
+    registerType: "autoUpdate",
+    manifest: {
+      name: "Amigo do ACS",
+      short_name: "Amigo ACS",
+      description: "Gestão local e offline de cidadãos, visitas e prioridades para Agentes Comunitários de Saúde.",
+      theme_color: "#0757a5",
+      background_color: "#f5f7fb",
+      display: "standalone",
+      lang: "pt-BR",
+    },
+    workbox: {
+      navigateFallback: "/index.html",
+    },
+  }),
+  vitePluginManusDebugCollector(),
+];
 
 export default defineConfig({
   plugins,

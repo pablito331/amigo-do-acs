@@ -1,0 +1,45 @@
+# Project TODO
+
+- [x] Documentar o modelo de dados consolidado de cidadãos, visitas e regras de busca ativa.
+- [x] Mapear os cabeçalhos reais dos CSVs compartilhados do e-SUS APS e validar o identificador de mesclagem CPF/CNS/nome+data de nascimento.
+- [x] Instalar e configurar Dexie, Papa Parse e vite-plugin-pwa no projeto local-first.
+- [x] Configurar o manifesto, o service worker e os recursos offline do PWA.
+- [x] Substituir o schema remoto Supabase por persistência local IndexedDB para a primeira versão individual.
+- [x] Retirar a autenticação do escopo da primeira versão para preservar o uso sem login e offline.
+- [x] Criar a camada Dexie/IndexedDB com tabelas locais para cidadãos, visitas, rotinas, importações e configurações.
+- [x] Substituir a sincronização remota por importação periódica, backup e restauração locais.
+- [x] Construir o dashboard responsivo com total de cidadãos, domicílios estimados, visitas mensais, alertas e indicadores de busca ativa.
+- [x] Construir a listagem pesquisável e filtrável de cidadãos por nome, CNS, endereço e situação de saúde.
+- [x] Construir o perfil do cidadão com dados clínicos consolidados e histórico de visitas.
+- [x] Implementar registro offline de visitas domiciliares com data, tipo, situação e observações.
+- [x] Criar a importação de múltiplos CSVs e-SUS com normalização de nulos e merge incremental sem duplicar cidadãos.
+- [x] Implementar regras configuráveis de priorização para visitas atrasadas, preventivos, diabetes, hipertensão, gestação e grupos de risco.
+- [x] Aplicar linguagem visual refinada, acessível e responsiva usando Tailwind e Lucide.
+- [x] Criar testes Vitest para normalização CSV e regras de prioridade local.
+- [x] Executar verificações de tipos, testes automatizados, build de produção e validação visual em desktop e celular.
+- [ ] Salvar checkpoint da primeira versão funcional e apresentar as orientações de uso local.
+- [x] Detectar automaticamente, nos metadados de cada CSV, a Lista Temática e a microárea de origem da exportação do PEC.
+- [x] Suportar importações periódicas de Geral, Gestação e puerpério, Pessoa idosa, Desenvolvimento infantil, Diabetes, Hipertensão, Saúde da mulher e Saúde bucal.
+- [x] Preservar as visitas domiciliares e o histórico operacional quando uma nova lista temática atualizar os dados clínicos ou cadastrais do cidadão.
+- [x] Pesquisar e documentar os indicadores de acompanhamento SUS/APS que podem ser calculados com segurança a partir dos relatórios PEC disponíveis.
+- [x] Exibir, por microárea, metas, denominadores, numeradores e situação dos indicadores de acompanhamento selecionados.
+- [x] Disponibilizar listas de prioridade acionáveis por indicador, com motivo, urgência e acesso direto ao cidadão para planejamento de visitas.
+- [x] Remover a dependência de Supabase e sincronização remota da primeira versão, mantendo todos os dados no dispositivo via IndexedDB.
+- [x] Criar exportação protegida por senha opcional e restauração validada de cidadãos, visitas, configurações e histórico de importações.
+- [x] Exibir orientações de privacidade, retenção local e risco de perda de dados ao iniciar o uso e antes de substituir a base importada.
+- [x] Remover a autenticação do escopo da primeira versão e configurar o PWA para uso individual no dispositivo do ACS.
+- [x] Substituir referências de sincronização, perfis e acesso remoto por instruções claras de importação, backup e restauração locais.
+- [x] Aplicar uma navegação e hierarquia visual próprias, inspiradas na familiaridade operacional do PEC: barra institucional azul, menu lateral, breadcrumb e áreas de trabalho amplas.
+- [x] Usar o nome Amigo do ACS em títulos, manifesto PWA e elementos de identificação do aplicativo.
+- [x] Criar rotina diária de visitas com meta definida pelo ACS e checklist de cidadãos priorizados na microárea ativa.
+- [x] Permitir concluir ou marcar cada visita como ausente, mantendo o registro local da ocorrência e da data.
+- [x] Repor automaticamente um cidadão elegível da fila de prioridades quando houver ausência, até alcançar a meta diária definida.
+- [x] Gerar relatório semanal exportável de visitas, com concluídas, ausências, observações e situação das metas.
+- [x] Criar uma versão de impressão limpa do relatório semanal para conferência ou entrega à equipe.
+- [x] Ajustar e validar navegação, formulários, tabelas, detalhes de cidadãos, rotina e relatórios para celulares, tablets e telas desktop amplas.
+- [x] Exibir campos clínicos relevantes por lista temática no perfil consolidado do cidadão.
+- [x] Permitir que alertas e indicadores abram diretamente o cidadão associado na tela de detalhes.
+- [x] Validar visualmente as telas principais no breakpoint de tablet e registrar o resultado.
+- [x] Exibir badge textual de urgência nas prioridades do dashboard e no detalhe aberto do cidadão.
+- [x] Mostrar a categoria/indicador de cada prioridade na lista acionável do dashboard junto do acesso direto ao cidadão.
+- [x] Adicionar no detalhe do cidadão um badge textual de urgência consistente com o dashboard.
