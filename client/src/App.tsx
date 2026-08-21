@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Importar from "./pages/Importar";
 import Indicadores from "./pages/Indicadores";
 import Rotina from "./pages/Rotina";
+import Sobre from "./pages/Sobre";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
         <Route path={"/importar"} component={Importar} />
         <Route path={"/backup"} component={Backup} />
         <Route path={"/ajustes"} component={Ajustes} />
+        <Route path={"/sobre"} component={Sobre} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>

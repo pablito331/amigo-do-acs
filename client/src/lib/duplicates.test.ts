@@ -13,4 +13,14 @@ describe("possíveis duplicidades", () => {
     expect(grupos[0]?.criterio).toBe("CPF");
     expect(grupos[0]?.cidadaos).toHaveLength(2);
   });
+
+  it("sinaliza nome e nascimento iguais mesmo quando CPF e CNS são diferentes entre listas", () => {
+    const grupos = encontrarPossiveisDuplicidades([
+      cidadao("1", { nome: "Ciro Rocha Vallinoto", dataNascimento: "14/07/1946", cpf: "172.675.600-91" }),
+      cidadao("2", { nome: "CIRO ROCHA VALLINOTO", dataNascimento: "14/07/1946", cns: "700604463429667" }),
+    ]);
+    expect(grupos).toHaveLength(1);
+    expect(grupos[0]?.criterio).toBe("Nome e nascimento");
+    expect(grupos[0]?.cidadaos.map((item) => item.id).sort()).toEqual(["1", "2"]);
+  });
 });

@@ -81,11 +81,32 @@ export interface ItemRotinaVisita {
   rotinaId: string;
   cidadaoId: string;
   ordem: number;
-  status: "pendente" | "concluida" | "ausente";
+  status: "pendente" | "em_atendimento" | "concluida" | "ausente";
   motivo: string;
   visitaId: string | null;
   substituiItemId: string | null;
+  anotacoes: string | null;
+  iniciadoEm: number | null;
   atualizadoEm: number;
+}
+
+export interface LembreteAgenda {
+  id: string;
+  data: string;
+  microarea: string | null;
+  texto: string;
+  concluido: boolean;
+  criadoEm: number;
+  atualizadoEm: number;
+}
+
+export interface TarefaAtualizacaoPec {
+  id: string;
+  cidadaoId: string;
+  motivo: string;
+  concluida: boolean;
+  criadaEm: number;
+  concluidaEm: number | null;
 }
 
 export interface Importacao {

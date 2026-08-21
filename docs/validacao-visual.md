@@ -48,3 +48,9 @@ Após a inclusão do resumo de peso e altura no detalhe do cidadão, a tela de c
 Em **21 de agosto de 2026**, as telas de Cidadãos e Rotina foram verificadas novamente em **1280×720** e **375×812**. A busca, os filtros, a ordenação, o cabeçalho com filtro mestre e a estrutura de detalhe do cidadão permanecem legíveis no celular. O detalhe é expandido abaixo do registro selecionado e pode ser recolhido ao tocar novamente o mesmo registro.
 
 A rotina diária preserva os controles de período e meta em uma única coluna no celular. O relatório semanal mantém as ações de exportar e imprimir, os campos de condições e a tabela com rolagem horizontal quando necessário. A validação visual do conteúdo de recência PEC e prioridade por cor deve ser repetida com uma base PEC real no navegador de uso, pois as capturas finais foram feitas sem registros persistidos nesta janela de validação.
+
+## Agenda selecionável, tarefas PEC e contato
+
+As telas **Rotina** e **Sobre** foram verificadas novamente em **1280×720** e **375×812**. A agenda apresenta uma lista ordenada por prioridade para seleção manual dos cidadãos, respeita a meta escolhida, mantém lembretes diários e mostra tarefas pendentes de atualização do cidadão no PEC. O botão de envio de resumo apresenta claramente o destinatário e informa que o CSV detalhado deve ser anexado manualmente após a revisão.
+
+A área **Sobre** mantém, em uma única rota, a versão instalada, as notas de versão e o Fale Conosco com destinatário visível. O detalhe contextual de cidadão em celular possui contrato automatizado para confirmar a ação explícita de fechamento e o atalho ao formulário de registro de visita. O rastreador de duplicidades também possui contrato automatizado para confirmar que analisa toda a base, sem ocultação pelo filtro mestre.

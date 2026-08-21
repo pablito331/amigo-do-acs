@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import { CONFIGURACOES_PADRAO, type Cidadao, type ConfiguracoesLocais, type Importacao, type ItemRotinaVisita, type RotinaVisitas, type Visita } from "./domain";
+import { CONFIGURACOES_PADRAO, type Cidadao, type ConfiguracoesLocais, type Importacao, type ItemRotinaVisita, type LembreteAgenda, type RotinaVisitas, type TarefaAtualizacaoPec, type Visita } from "./domain";
 
 export class AmigoAcsDb extends Dexie {
   cidadaos!: Table<Cidadao, string>;
@@ -8,6 +8,8 @@ export class AmigoAcsDb extends Dexie {
   configuracoes!: Table<ConfiguracoesLocais, string>;
   rotinas!: Table<RotinaVisitas, string>;
   itensRotina!: Table<ItemRotinaVisita, string>;
+  lembretes!: Table<LembreteAgenda, string>;
+  tarefasPec!: Table<TarefaAtualizacaoPec, string>;
 
   constructor() {
     super("amigo-do-acs");
@@ -24,6 +26,25 @@ export class AmigoAcsDb extends Dexie {
       configuracoes: "chave",
       rotinas: "id,data,microarea,criadaEm",
       itensRotina: "id,rotinaId,cidadaoId,status,ordem",
+    });
+    this.version(3).stores({
+      cidadaos: "id,&chave,nome,cpf,cns,microarea,*fontes,atualizadoEm",
+      visitas: "id,cidadaoId,data,criadaEm",
+      importacoes: "id,listaTematica,microarea,importadaEm",
+      configuracoes: "chave",
+      rotinas: "id,data,microarea,criadaEm",
+      itensRotina: "id,rotinaId,cidadaoId,status,ordem",
+      lembretes: "id,data,microarea,concluido,criadoEm",
+    });
+    this.version(4).stores({
+      cidadaos: "id,&chave,nome,cpf,cns,microarea,*fontes,atualizadoEm",
+      visitas: "id,cidadaoId,data,criadaEm",
+      importacoes: "id,listaTematica,microarea,importadaEm",
+      configuracoes: "chave",
+      rotinas: "id,data,microarea,criadaEm",
+      itensRotina: "id,rotinaId,cidadaoId,status,ordem",
+      lembretes: "id,data,microarea,concluido,criadoEm",
+      tarefasPec: "id,cidadaoId,concluida,criadaEm",
     });
   }
 }

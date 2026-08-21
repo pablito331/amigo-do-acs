@@ -12,4 +12,8 @@ describe("microárea ativa", () => {
     expect(mesmaMicroarea("06", null)).toBe(true);
     expect(mesmaMicroarea("06", "07")).toBe(false);
   });
+
+  it("remove aspas que podem vir nos campos exportados pelo PEC", () => {
+    expect(mesmaMicroarea('"06"', "6")).toBe(true);
+  });
 });

@@ -1,5 +1,5 @@
 export function normalizarMicroarea(valor: string | null | undefined): string | null {
-  const texto = valor?.trim();
+  const texto = valor?.trim().replace(/^["']|["']$/g, "");
   if (!texto) return null;
   if (/^\d+$/.test(texto)) return String(Number(texto));
   return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();

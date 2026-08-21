@@ -7,6 +7,7 @@ import {
   FileUp,
   Filter,
   HeartPulse,
+  Info,
   Settings2,
   UsersRound,
 } from "lucide-react";
@@ -24,6 +25,7 @@ const navegacao = [
   { caminho: "/importar", rotulo: "Importar listas", descricao: "CSV do PEC", icone: FileUp },
   { caminho: "/backup", rotulo: "Backup", descricao: "Proteção local", icone: ArchiveRestore },
   { caminho: "/ajustes", rotulo: "Ajustes", descricao: "Dispositivo e regras", icone: Settings2 },
+  { caminho: "/sobre", rotulo: "Sobre", descricao: "Ajuda e atualizações", icone: Info },
 ];
 
 function tituloDaRota(caminho: string) {
@@ -77,7 +79,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       <div className="mx-auto flex max-w-[1600px]">
-        <aside className="sticky top-0 hidden h-[calc(100vh-113px)] w-[250px] shrink-0 border-r border-[#d9e2ef] bg-white lg:block">
+        <aside className="sticky top-0 hidden h-[calc(100vh-113px)] w-[250px] shrink-0 overflow-y-auto border-r border-[#d9e2ef] bg-white lg:block">
           <nav className="px-3 py-5" aria-label="Navegação principal">
             <p className="px-3 pb-3 text-[10px] font-bold uppercase tracking-[0.13em] text-slate-500">Área de trabalho</p>
             <div className="space-y-1">
@@ -101,7 +103,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
               })}
             </div>
           </nav>
-          <div className="absolute inset-x-0 bottom-0 border-t border-slate-100 p-4">
+          <div className="border-t border-slate-100 p-4">
             <div className="rounded-xl bg-[#f6f9fd] p-3">
               <p className="text-xs font-bold text-slate-700">Uso individual</p>
               <p className="mt-1 text-[11px] leading-relaxed text-slate-500">Faça backup regularmente para proteger os dados deste navegador.</p>

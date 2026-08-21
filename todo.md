@@ -75,14 +75,14 @@
 - [x] Consolidar a rotina de visitas para que cada cidadão apareça uma única vez, reunindo hipertensão, diabetes e demais condições relevantes.
 - [x] Permitir criar rotina por dia ou semana, com período selecionado e meta de visitas por dia.
 - [x] Incluir condições relevantes do cidadão, campos de observações e assinatura no relatório imprimível da rotina.
-- [ ] Cobrir a consolidação de rotina e a detecção de duplicidades com testes automatizados e validação visual.
+- [x] Cobrir a consolidação de rotina e a detecção de duplicidades com testes automatizados e validação visual.
 - [x] Permitir ordenar a lista de cidadãos por nome, prioridade, endereço e acompanhamento, preservando filtros e microárea mestre.
 - [x] Adicionar rolagem interna ao painel de detalhes do cidadão em desktop, sem cortar medidas, prioridades, visita ou histórico.
 - [x] Classificar o IMC de adultos como baixo peso, faixa adequada, sobrepeso ou obesidade, com aviso de apoio à avaliação profissional.
 - [x] Exibir somente o IMC calculado para crianças e adolescentes, sem aplicar a classificação de adultos.
 - [x] Criar testes para as faixas orientativas de IMC adulto.
-- [ ] Abrir o detalhe do cidadão em painel móvel próprio ao tocar no registro, com fechamento claro e acesso às visitas.
-- [ ] Validar a abertura e o fechamento do detalhe de cidadão em tela de celular.
+- [x] Abrir o detalhe do cidadão em painel móvel contextual ao tocar no registro, com fechamento claro e acesso às visitas.
+- [x] Validar a abertura e o fechamento do detalhe de cidadão em tela de celular.
 - [x] Sinalizar o acompanhamento de peso e altura de crianças para o Bolsa Família por recência da medição: verde até 30 dias, amarelo de 31 a 60 dias e vermelho acima de 60 dias ou sem data disponível.
 - [x] Exibir no detalhe infantil as medidas de peso e altura disponíveis na importação, destacando a data mais recente usada na sinalização.
 - [x] Criar testes automatizados para as faixas de recência do acompanhamento antropométrico infantil e validar a apresentação visual.
@@ -105,6 +105,33 @@
 - [x] Adicionar um seletor de período no painel da microárea para filtrar as visitas locais exibidas.
 - [x] Exibir na lista de cidadãos o resumo completo das recências PEC, mantendo distinção do histórico local.
 - [ ] Próxima versão: permitir iniciar uma conversa com o cidadão ao tocar no número de telefone, com escolha explícita do canal disponível.
-- [ ] Próxima versão: exibir notas de versão com itens corrigidos, incluídos e melhorados após cada publicação.
-- [ ] Próxima versão: permitir compartilhar relatórios somente por ação visível e confirmação explícita, exibindo o destinatário e o conteúdo antes do envio.
-- [ ] Aguardar o endereço de e-mail dedicado do usuário antes de configurar qualquer compartilhamento de relatórios.
+- [x] Próxima versão: exibir notas de versão com itens corrigidos, incluídos e melhorados após cada publicação.
+- [x] Próxima versão: permitir compartilhar relatórios somente por ação visível e confirmação explícita, exibindo o destinatário e o conteúdo antes do envio.
+- [x] Aguardar o endereço de e-mail dedicado do usuário antes de configurar qualquer compartilhamento de relatórios.
+- [x] Configurar o Fale Conosco para o e-mail dedicado informado, exibindo destinatário e conteúdo antes da abertura do cliente de e-mail.
+- [x] Permitir iniciar o compartilhamento transparente do resumo semanal pelo e-mail dedicado, informando que o CSV exportado pode ser anexado manualmente no cliente de e-mail.
+- [x] Próxima versão: listar cidadãos por prioridade antes de criar a agenda e permitir que o ACS selecione manualmente quem será agendado.
+- [x] Próxima versão: respeitar a meta diária como limite e indicador da seleção manual, permitindo ajuste antes de salvar a agenda.
+- [x] Próxima versão: permitir marcar no cidadão a ação “Atualizar cidadão no PEC”, solicitando o motivo da atualização.
+- [x] Próxima versão: criar na agenda tarefas de atualização do cidadão no PEC, com motivo informado, até serem resolvidas.
+- [x] Próxima versão — correção: revisar o detector de duplicados, pois há duplicidades conhecidas na base que não foram identificadas.
+- [x] Próxima versão: substituir a rotina atual por uma agenda/calendário de visitas por dia, com visualização de compromissos planejados.
+- [x] Próxima versão: incluir lembretes por dia na agenda de visitas.
+- [x] Próxima versão: trocar a ação direta “Concluir” por “Visitar”, abrindo o registro da visita com anotações antes da conclusão final.
+- [x] Próxima versão: criar tela “Fale Conosco” usando o e-mail dedicado que será informado pelo usuário, com destinatário e conteúdo visíveis antes do envio.
+- [x] Próxima versão: criar tela “Sobre” com propósito do aplicativo, orientação de uso local e versão instalada.
+- [x] Próxima versão: apresentar notas de versão no aplicativo, informando correções, melhorias e recursos incluídos após cada publicação.
+- [x] Próxima versão: analisar duplicidades reais das listas PEC compartilhadas e ampliar os critérios de identificação sem excluir registros automaticamente.
+- [x] Corrigir o rastreador de duplicidades na tela de Indicadores para analisar toda a base importada, evitando que o filtro mestre oculte duplicados reais.
+- [x] Adicionar teste do fluxo de indicadores para garantir que duplicidades com identificadores diferentes permaneçam visíveis na interface.
+- [x] Próxima versão: evoluir o banco local para armazenar dias planejados de agenda, lembretes e o estado de atendimento de cada visita.
+- [x] Próxima versão: criar visualização de calendário e agenda diária de visitas por microárea.
+- [x] Próxima versão: permitir abrir “Visitar”, preencher anotações e somente então concluir a visita.
+- [x] Próxima versão: criar telas Sobre, Fale Conosco e Notas de versão, mantendo o destinatário de contato visível ao usuário.
+- [x] Criar teste de interface para garantir que a tela Indicadores exiba duplicidades com nome/data iguais e CPF/CNS diferentes.
+- [x] Documentar a decisão de manter Sobre, Fale Conosco e Notas de versão como seções da única rota Sobre.
+- [x] Exibir na tela Sobre a versão instalada a partir de uma fonte do próprio build e revalidar a apresentação.
+- [x] Adicionar teste explícito garantindo que um cidadão com múltiplas condições apareça uma única vez na agenda.
+- [x] Validar visualmente e documentar o rastreador de duplicidades na tela Indicadores.
+- [x] Revisar o detalhe móvel do cidadão para garantir fechamento claro e acesso ao formulário/histórico de visitas.
+- [x] Capturar e documentar a abertura e o fechamento do detalhe contextual do cidadão em tela móvel.
