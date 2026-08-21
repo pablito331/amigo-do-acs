@@ -27,6 +27,12 @@ export interface Cidadao {
   endereco: string | null;
   mesesUltimaVisitaDomiciliar: number | null;
   diasUltimaVisitaDomiciliar: number | null;
+  pesoKg: number | null;
+  alturaCm: number | null;
+  dataUltimaMedicaoPesoAltura: string | null;
+  beneficiarioBolsaFamilia: string | null;
+  vigenciaBolsaFamilia: string | null;
+  registrosPesoAltura12Meses: string | null;
   ultimaMedicaoPressao: string | null;
   dataUltimaMedicaoPressao: string | null;
   isMulher: boolean;

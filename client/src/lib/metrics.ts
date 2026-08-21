@@ -1,5 +1,6 @@
 import { estaNoMesAtual, mesesDesde } from "./date-utils";
 import type { Cidadao, IndicadorLocal, Prioridade, RegrasPrioridade, Visita } from "./domain";
+import { mesmaMicroarea } from "./microarea";
 import { gerarPrioridades } from "./priority";
 
 function indicador(id: string, nome: string, descricao: string, adequados: number, total: number, meta = 80): IndicadorLocal {
@@ -14,7 +15,7 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
   visitasNoMes: number;
   domicilios: number;
 } {
-  const base = microareaAtiva ? cidadaos.filter((item) => item.microarea === microareaAtiva) : cidadaos;
+  const base = cidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva));
   const idsDaBase = new Set(base.map((item) => item.id));
   const prioridades = gerarPrioridades(base, regras);
   const gestantes = base.filter((item) => item.isGestante);

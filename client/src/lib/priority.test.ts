@@ -39,4 +39,13 @@ describe("priorização local para busca ativa", () => {
     expect(painel.prioridades.every((item) => item.cidadaoId === "06")).toBe(true);
     expect(painel.indicadores.find((item) => item.id === "diabetes")?.denominador).toBe(1);
   });
+
+  it("considera equivalentes as microáreas 4 e 04", () => {
+    const microarea04 = criarCidadao({ id: "04", chave: "cpf:04", microarea: "04", isDiabetico: true, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaDiabetes: null });
+    const microarea05 = criarCidadao({ id: "05", chave: "cpf:05", microarea: "05", isDiabetico: true, dataUltimaHemoglobinaGlicada: "01/01/2026", dataUltimaConsultaDiabetes: "01/01/2026" });
+    const painel = calcularPainel([microarea04, microarea05], [], CONFIGURACOES_PADRAO.regras, "4");
+    expect(painel.indicadores.find((item) => item.id === "diabetes")?.denominador).toBe(1);
+    expect(painel.prioridades.map((item) => item.cidadaoId)).toContain("04");
+    expect(painel.prioridades.map((item) => item.cidadaoId)).not.toContain("05");
+  });
 });

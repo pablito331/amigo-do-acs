@@ -39,7 +39,7 @@ export async function obterConfiguracoes(): Promise<ConfiguracoesLocais> {
 }
 
 export async function salvarConfiguracoes(dados: Omit<ConfiguracoesLocais, "chave" | "atualizadoEm">) {
-  await db.configuracoes.put({ chave: "configuracoes", ...dados, atualizadoEm: Date.now() });
+  await db.configuracoes.put({ chave: "configuracoes", ...dados, microareaAtiva: dados.microareaAtiva?.trim() || null, atualizadoEm: Date.now() });
 }
 
 export async function registrarVisita(visita: Omit<Visita, "id" | "criadaEm">) {

@@ -13,12 +13,18 @@ export function normalizarTextoCsv(valor: string | undefined): string | null {
   return !limpo || limpo === "-" ? null : limpo;
 }
 
-function numero(valor: string | undefined): number | null {
+export function numeroCsv(valor: string | undefined): number | null {
   const limpo = normalizarTextoCsv(valor);
   if (!limpo) return null;
   const normalizado = limpo.replace(/[^0-9,.-]/g, "").replace(",", ".");
   const resultado = Number(normalizado);
   return Number.isFinite(resultado) ? resultado : null;
+}
+
+export function alturaEmCentimetros(valor: string | undefined): number | null {
+  const medida = numeroCsv(valor);
+  if (medida === null || medida <= 0) return null;
+  return medida <= 3 ? Math.round(medida * 100) : Math.round(medida);
 }
 
 export function normalizarIdentificador(valor: string | null): string | null {
@@ -70,8 +76,14 @@ function valoresBase(linha: LinhaCsv): Partial<Cidadao> {
     microarea: normalizarTextoCsv(linha["Microárea"]),
     telefone: normalizarTextoCsv(linha["Telefone de contato"]) ?? normalizarTextoCsv(linha["Telefone celular"]) ?? normalizarTextoCsv(linha["Telefone residencial"]),
     endereco: endereco(linha),
-    mesesUltimaVisitaDomiciliar: numero(linha["Meses desde a última visita domiciliar"]),
-    diasUltimaVisitaDomiciliar: numero(linha["Dias desde a última visita domiciliar"]),
+    mesesUltimaVisitaDomiciliar: numeroCsv(linha["Meses desde a última visita domiciliar"]),
+    diasUltimaVisitaDomiciliar: numeroCsv(linha["Dias desde a última visita domiciliar"]),
+    pesoKg: numeroCsv(linha["Última medição de peso"]),
+    alturaCm: alturaEmCentimetros(linha["Última medição de altura"]),
+    dataUltimaMedicaoPesoAltura: normalizarTextoCsv(linha["Data da última medição de peso e altura"]),
+    beneficiarioBolsaFamilia: normalizarTextoCsv(linha["Beneficiário do programa Bolsa Família"]),
+    vigenciaBolsaFamilia: normalizarTextoCsv(linha["Vigência do programa Bolsa Família"]),
+    registrosPesoAltura12Meses: normalizarTextoCsv(linha["Registros de peso e altura simultâneos nos últimos 12 meses"]),
     ultimaMedicaoPressao: normalizarTextoCsv(linha["Última medição de pressão arterial"]),
     dataUltimaMedicaoPressao: normalizarTextoCsv(linha["Data da última medição de pressão arterial"]),
   };
@@ -95,7 +107,7 @@ function aplicarLista(base: Cidadao, linha: LinhaCsv, lista: ListaTematica): Cid
   if (lista === "Gestação e puerpério") {
     proximo.isGestante = true;
     proximo.igSemanas = normalizarTextoCsv(linha["IG (ecografia obstétrica) (semanas)"]) ?? normalizarTextoCsv(linha["IG (DUM) (semanas)"]);
-    proximo.qtdConsultasPreNatal = numero(linha["Quantidade de atendimentos no pré-natal"]);
+    proximo.qtdConsultasPreNatal = numeroCsv(linha["Quantidade de atendimentos no pré-natal"]);
   }
   if (lista === "Diabetes") {
     proximo.isDiabetico = true;
@@ -119,7 +131,7 @@ function aplicarLista(base: Cidadao, linha: LinhaCsv, lista: ListaTematica): Cid
 function cidadaoNovo(chave: string): Cidadao {
   return {
     id: crypto.randomUUID(), chave, nome: "Cidadão sem nome", dataNascimento: null, idadeStr: null, sexo: null, cpf: null, cns: null, microarea: null, telefone: null, endereco: null,
-    mesesUltimaVisitaDomiciliar: null, diasUltimaVisitaDomiciliar: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null,
+    mesesUltimaVisitaDomiciliar: null, diasUltimaVisitaDomiciliar: null, pesoKg: null, alturaCm: null, dataUltimaMedicaoPesoAltura: null, beneficiarioBolsaFamilia: null, vigenciaBolsaFamilia: null, registrosPesoAltura12Meses: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null,
     isMulher: false, examePreventivoUltimaAvaliacao: null, isGestante: false, igSemanas: null, qtdConsultasPreNatal: null,
     isHipertenso: false, isDiabetico: false, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaHipertensao: null, dataUltimaConsultaDiabetes: null,
     isIdoso: false, isCrianca: false, isSaudeBucal: false, fontes: [], atualizadoEm: Date.now(),

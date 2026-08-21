@@ -1,9 +1,10 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { CalendarDays, Check, ChevronRight, CircleAlert, Download, ListChecks, Printer, RefreshCcw, UserRoundCheck, UserRoundX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { db } from "@/lib/acs-db";
+import { db, obterConfiguracoes } from "@/lib/acs-db";
 import { CONFIGURACOES_PADRAO } from "@/lib/domain";
+import { mesmaMicroarea } from "@/lib/microarea";
 import { apagarRotinaDoDia, concluirItemRotina, criarRotina, registrarAusenciaERepor } from "@/lib/routine";
 import { exportarRelatorioSemanal, fimSemana, inicioSemana } from "@/lib/visit-report";
 
@@ -11,24 +12,29 @@ function formatarData(data: Date) { return new Intl.DateTimeFormat("pt-BR", { da
 
 export default function Rotina() {
   const [meta, setMeta] = useState(10);
-  const cidadaos = useLiveQuery(() => db.cidadaos.toArray(), []) ?? [];
+  const todosCidadaos = useLiveQuery(() => db.cidadaos.toArray(), []) ?? [];
   const visitas = useLiveQuery(() => db.visitas.toArray(), []) ?? [];
   const configuracoes = useLiveQuery(() => db.configuracoes.get("configuracoes"), []);
+  const microareaAtiva = configuracoes?.microareaAtiva ?? null;
+  const cidadaosDaMicroarea = useMemo(() => todosCidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva)), [todosCidadaos, microareaAtiva]);
+  const cidadaos = cidadaosDaMicroarea;
   const hoje = new Date();
   const dataHoje = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
-  const rotina = useLiveQuery(() => db.rotinas.where("data").equals(dataHoje).first(), [dataHoje]);
+  const rotina = useLiveQuery(async () => (await db.rotinas.where("data").equals(dataHoje).toArray()).find((item) => mesmaMicroarea(item.microarea, microareaAtiva)), [dataHoje, microareaAtiva]);
   const itens = useLiveQuery(() => rotina ? db.itensRotina.where("rotinaId").equals(rotina.id).sortBy("ordem") : [], [rotina?.id]) ?? [];
-  const porId = useMemo(() => new Map(cidadaos.map((item) => [item.id, item])), [cidadaos]);
+  const porId = useMemo(() => new Map(cidadaosDaMicroarea.map((item) => [item.id, item])), [cidadaosDaMicroarea]);
   const regras = configuracoes?.regras ?? CONFIGURACOES_PADRAO.regras;
   const semanaInicio = inicioSemana();
   const semanaFim = fimSemana();
-  const visitasSemana = visitas.filter((item) => { const data = new Date(`${item.data}T12:00:00`); return data >= semanaInicio && data <= semanaFim; });
+  const idsDaMicroarea = useMemo(() => new Set(cidadaosDaMicroarea.map((item) => item.id)), [cidadaosDaMicroarea]);
+  const visitasSemana = visitas.filter((item) => { const data = new Date(`${item.data}T12:00:00`); return idsDaMicroarea.has(item.cidadaoId) && data >= semanaInicio && data <= semanaFim; });
+  useEffect(() => { void obterConfiguracoes(); }, []);
   const concluidas = itens.filter((item) => item.status === "concluida").length;
   const ausentes = itens.filter((item) => item.status === "ausente").length;
 
-  const iniciar = async () => { if (!cidadaos.length) { toast.error("Importe ao menos uma lista do PEC antes de criar a rotina."); return; } const criada = await criarRotina(meta, cidadaos, regras, configuracoes?.microareaAtiva ?? null); toast.success(`Rotina criada com até ${criada.meta} visitas prioritárias.`); };
+  const iniciar = async () => { if (!cidadaosDaMicroarea.length) { toast.error(microareaAtiva ? `Não há cidadãos importados na microárea ${microareaAtiva}.` : "Importe ao menos uma lista do PEC antes de criar a rotina."); return; } const criada = await criarRotina(meta, cidadaosDaMicroarea, regras, microareaAtiva); toast.success(`Rotina criada com até ${criada.meta} visitas prioritárias.`); };
   const concluir = async (itemId: string) => { const item = itens.find((registro) => registro.id === itemId); if (!item) return; await concluirItemRotina(item); toast.success("Visita marcada como concluída."); };
-  const ausente = async (itemId: string) => { const item = itens.find((registro) => registro.id === itemId); if (!item || !rotina) return; if (!window.confirm("Registrar este cidadão como ausente e buscar um substituto para a meta?")) return; const reposto = await registrarAusenciaERepor(item, rotina, cidadaos, regras); toast.success(reposto ? "Ausência registrada. Um substituto foi incluído na rotina." : "Ausência registrada. Não há outro cidadão elegível para reposição."); };
+  const ausente = async (itemId: string) => { const item = itens.find((registro) => registro.id === itemId); if (!item || !rotina) return; if (!window.confirm("Registrar este cidadão como ausente e buscar um substituto para a meta?")) return; const reposto = await registrarAusenciaERepor(item, rotina, cidadaosDaMicroarea, regras); toast.success(reposto ? "Ausência registrada. Um substituto foi incluído na rotina." : "Ausência registrada. Não há outro cidadão elegível para reposição."); };
 
   return <section className="mx-auto max-w-[1180px] pb-16 lg:pb-0"><div className="no-print mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.12em] text-[#0757a5]">Planejamento de campo</p><h1 className="mt-1 text-3xl font-bold tracking-tight text-[#172b4d]">Rotina de visitas</h1><p className="mt-2 text-sm text-slate-600">Organize a meta do dia com base nas prioridades calculadas para sua microárea.</p></div><div className="rounded-lg border border-[#c9dcf3] bg-white px-4 py-2 text-sm font-semibold text-[#0757a5]"><CalendarDays className="mr-2 inline h-4 w-4" />{formatarData(hoje)}</div></div>
     {!rotina ? <div className="no-print rounded-xl border border-[#cfdeef] bg-white p-7 shadow-[0_3px_13px_rgba(25,54,95,0.04)]"><div className="grid gap-6 md:grid-cols-[1fr_auto]"><div><span className="grid h-12 w-12 place-items-center rounded-xl bg-[#dceeff] text-[#0757a5]"><ListChecks className="h-6 w-6" /></span><h2 className="mt-4 text-xl font-bold text-[#173d6d]">Defina a meta de visitas de hoje</h2><p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">O Amigo do ACS selecionará os cidadãos com maior prioridade. Caso alguém esteja ausente, a lista poderá trazer outra pessoa elegível para manter sua meta de visitas concluídas.</p></div><div className="self-center rounded-xl bg-[#f4f8fd] p-5"><label className="grid gap-2 text-sm font-bold text-slate-700">Quantidade de visitas<input type="number" min="1" max="50" value={meta} onChange={(event) => setMeta(Math.min(50, Math.max(1, Number(event.target.value) || 1)))} className="h-12 w-36 rounded-lg border border-slate-300 bg-white px-3 text-xl font-bold text-[#173d6d] outline-none focus:border-[#0757a5] focus:ring-2 focus:ring-blue-100" /></label><button onClick={() => void iniciar()} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#0757a5] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#064987]"><ChevronRight className="h-4 w-4" /> Gerar checklist</button></div></div></div> : <>

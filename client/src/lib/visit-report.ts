@@ -22,7 +22,7 @@ export function fimSemana(data = new Date()) {
 
 export function exportarRelatorioSemanal(visitas: Visita[], cidadaos: Cidadao[], inicio: Date, fim: Date) {
   const porId = new Map(cidadaos.map((item) => [item.id, item]));
-  const itens = visitas.filter((item) => { const data = new Date(`${item.data}T12:00:00`); return data >= inicio && data <= fim; }).sort((a, b) => a.data.localeCompare(b.data));
+  const itens = visitas.filter((item) => { const data = new Date(`${item.data}T12:00:00`); return porId.has(item.cidadaoId) && data >= inicio && data <= fim; }).sort((a, b) => a.data.localeCompare(b.data));
   const linhas = [["Data", "Cidadão", "Microárea", "Endereço", "Tipo", "Situação", "Observações"], ...itens.map((item) => { const cidadao = porId.get(item.cidadaoId); return [item.data, cidadao?.nome ?? "Cidadão removido", cidadao?.microarea ?? "", cidadao?.endereco ?? "", item.tipo, item.situacao === "concluida" ? "Concluída" : "Ausente", item.observacoes ?? ""]; })];
   const conteudo = `\uFEFF${linhas.map((linha) => linha.map(escaparCsv).join(";")).join("\n")}`;
   const url = URL.createObjectURL(new Blob([conteudo], { type: "text/csv;charset=utf-8" }));

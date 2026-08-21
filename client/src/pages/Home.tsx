@@ -1,8 +1,10 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { AlertTriangle, ArrowRight, CalendarCheck2, HomeIcon, UsersRound } from "lucide-react";
 import { useLocation } from "wouter";
-import { db } from "@/lib/acs-db";
+import { useEffect, useMemo } from "react";
+import { db, obterConfiguracoes } from "@/lib/acs-db";
 import { calcularPainel } from "@/lib/metrics";
+import { mesmaMicroarea } from "@/lib/microarea";
 import { CONFIGURACOES_PADRAO } from "@/lib/domain";
 
 const situacaoEstilo = {
@@ -17,10 +19,13 @@ export default function Home() {
   const cidadaos = useLiveQuery(() => db.cidadaos.toArray(), []) ?? [];
   const visitas = useLiveQuery(() => db.visitas.toArray(), []) ?? [];
   const configuracoes = useLiveQuery(() => db.configuracoes.get("configuracoes"), []);
-  const dados = calcularPainel(cidadaos, visitas, configuracoes?.regras ?? CONFIGURACOES_PADRAO.regras, configuracoes?.microareaAtiva ?? null);
+  const microareaAtiva = configuracoes?.microareaAtiva ?? null;
+  const cidadaosDaMicroarea = useMemo(() => cidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva)), [cidadaos, microareaAtiva]);
+  const dados = calcularPainel(cidadaos, visitas, configuracoes?.regras ?? CONFIGURACOES_PADRAO.regras, microareaAtiva);
+  useEffect(() => { void obterConfiguracoes(); }, []);
 
   const cards = [
-    { rotulo: "Cidadãos na base", valor: cidadaos.length, descricao: "registros disponíveis localmente", icone: UsersRound, tom: "blue" },
+    { rotulo: "Cidadãos na base", valor: cidadaosDaMicroarea.length, descricao: microareaAtiva ? `registros da microárea ${microareaAtiva}` : "registros disponíveis localmente", icone: UsersRound, tom: "blue" },
     { rotulo: "Domicílios estimados", valor: dados.domicilios, descricao: "endereços distintos na base", icone: HomeIcon, tom: "teal" },
     { rotulo: "Visitas no mês", valor: dados.visitasNoMes, descricao: "registradas neste dispositivo", icone: CalendarCheck2, tom: "orange" },
     { rotulo: "Prioridades abertas", valor: dados.prioridades.length, descricao: "situações para acompanhamento", icone: AlertTriangle, tom: "red" },

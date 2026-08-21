@@ -5,13 +5,16 @@ import {
   ChevronRight,
   CloudOff,
   FileUp,
+  Filter,
   HeartPulse,
   Settings2,
   UsersRound,
 } from "lucide-react";
-import { type ReactNode, useEffect } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { type ReactNode, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
-import { obterConfiguracoes } from "@/lib/acs-db";
+import { db, obterConfiguracoes, salvarConfiguracoes } from "@/lib/acs-db";
+import type { Cidadao } from "@/lib/domain";
 
 const navegacao = [
   { caminho: "/", rotulo: "Painel", descricao: "Visão da microárea", icone: BarChart3 },
@@ -29,10 +32,18 @@ function tituloDaRota(caminho: string) {
 export default function AppShell({ children }: { children: ReactNode }) {
   const [localizacao, navegar] = useLocation();
   const titulo = tituloDaRota(localizacao);
+  const configuracoes = useLiveQuery(() => db.configuracoes.get("configuracoes"), []);
+  const cidadaos = (useLiveQuery(() => db.cidadaos.toArray(), []) ?? []) as Cidadao[];
+  const microareas = useMemo<string[]>(() => Array.from(new Set<string>(cidadaos.map((item) => item.microarea).filter((item): item is string => typeof item === "string" && item.length > 0))).sort((a, b) => a.localeCompare(b, "pt-BR", { numeric: true })), [cidadaos]);
 
   useEffect(() => {
     void obterConfiguracoes();
   }, []);
+
+  const alterarMicroarea = async (valor: string) => {
+    const atual = configuracoes ?? await obterConfiguracoes();
+    await salvarConfiguracoes({ nomeDispositivo: atual.nomeDispositivo, microareaAtiva: valor || null, regras: atual.regras });
+  };
 
   return (
     <div className="min-h-screen bg-[#f4f6fa] text-[#1d2939]">
@@ -99,16 +110,13 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
         <main className="min-w-0 flex-1">
           <div className="border-b border-[#d9e2ef] bg-white">
-            <div className="flex h-14 items-center justify-between px-4 sm:px-7">
+            <div className="flex min-h-14 flex-wrap items-center justify-between gap-3 px-4 py-2 sm:px-7">
               <div className="flex items-center gap-2 text-sm">
                 <span className="font-medium text-[#0757a5]">Início</span>
                 <ChevronRight className="h-4 w-4 text-slate-400" />
                 <span className="font-semibold text-slate-700">{titulo}</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-emerald-700">
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                Pronto para trabalhar offline
-              </div>
+              <div className="flex flex-wrap items-center justify-end gap-3"><label className="flex items-center gap-2 rounded-lg border border-[#bdd2eb] bg-[#f7fbff] px-2.5 py-1.5 text-xs font-semibold text-[#0757a5]"><Filter className="h-3.5 w-3.5" /><span className="hidden sm:inline">Microárea mestre</span><select aria-label="Filtro mestre de microárea" value={configuracoes?.microareaAtiva ?? ""} onChange={(event) => void alterarMicroarea(event.target.value)} className="max-w-32 bg-transparent text-xs font-bold outline-none"><option value="">Todas</option>{microareas.map((microarea) => <option key={microarea} value={microarea}>Microárea {microarea}</option>)}</select></label><div className="flex items-center gap-2 text-xs font-medium text-emerald-700"><span className="h-2 w-2 rounded-full bg-emerald-500" />Pronto para trabalhar offline</div></div>
             </div>
           </div>
           <div className="px-4 py-6 sm:px-7 sm:py-8">{children}</div>

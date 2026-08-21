@@ -17,7 +17,7 @@
 - [x] Aplicar linguagem visual refinada, acessível e responsiva usando Tailwind e Lucide.
 - [x] Criar testes Vitest para normalização CSV e regras de prioridade local.
 - [x] Executar verificações de tipos, testes automatizados, build de produção e validação visual em desktop e celular.
-- [ ] Salvar checkpoint da primeira versão funcional e apresentar as orientações de uso local.
+- [x] Salvar checkpoint da primeira versão funcional e apresentar as orientações de uso local.
 - [x] Detectar automaticamente, nos metadados de cada CSV, a Lista Temática e a microárea de origem da exportação do PEC.
 - [x] Suportar importações periódicas de Geral, Gestação e puerpério, Pessoa idosa, Desenvolvimento infantil, Diabetes, Hipertensão, Saúde da mulher e Saúde bucal.
 - [x] Preservar as visitas domiciliares e o histórico operacional quando uma nova lista temática atualizar os dados clínicos ou cadastrais do cidadão.
@@ -43,3 +43,17 @@
 - [x] Exibir badge textual de urgência nas prioridades do dashboard e no detalhe aberto do cidadão.
 - [x] Mostrar a categoria/indicador de cada prioridade na lista acionável do dashboard junto do acesso direto ao cidadão.
 - [x] Adicionar no detalhe do cidadão um badge textual de urgência consistente com o dashboard.
+- [x] Mapear os campos reais de peso, altura, IMC e datas de acompanhamento presentes nos relatórios PEC disponíveis.
+- [x] Estender o cidadão consolidado e a importação incremental para preservar as medidas antropométricas disponíveis.
+- [x] Exibir no perfil do cidadão uma seção de medidas e, para crianças, um resumo de crescimento e acompanhamento.
+- [x] Validar a apresentação das medidas em telas móveis, tablet e desktop e criar testes da atualização.
+- [ ] Salvar checkpoint da atualização de medidas antropométricas e filtro de microárea.
+- [x] Exibir no topo do detalhe do cidadão uma linha compacta de peso, altura e data da última medição, conforme o relatório Geral do PEC.
+- [x] Corrigir o filtro da microárea ativa para restringir painel, cidadãos, prioridades, rotina e relatórios aos registros correspondentes.
+- [x] Permitir selecionar uma microárea diretamente na tela de cidadãos, além da configuração persistente em Ajustes.
+- [x] Criar teste de normalização e filtragem para microáreas com e sem zero à esquerda, como 4 e 04.
+- [x] Validar visualmente em tablet o detalhe do cidadão com peso, altura, IMC e acompanhamento infantil.
+- [x] Validar em tablet o detalhe aberto de um cidadão importado com peso, altura, IMC e acompanhamento infantil visíveis.
+- [x] Criar um filtro mestre de microárea persistente no cabeçalho global do aplicativo.
+- [x] Fazer o filtro mestre atualizar Painel, Cidadãos, Rotina, prioridades, visitas e relatórios sem exigir filtros adicionais por página.
+- [x] Remover o seletor de microárea redundante da tela de cidadãos e validar o comportamento global em múltiplas telas.

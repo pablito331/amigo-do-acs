@@ -1,6 +1,7 @@
 import { db, registrarVisita } from "./acs-db";
 import { gerarPrioridades } from "./priority";
 import type { Cidadao, ItemRotinaVisita, RegrasPrioridade, RotinaVisitas } from "./domain";
+import { mesmaMicroarea } from "./microarea";
 
 function hojeLocal() {
   const data = new Date();
@@ -11,7 +12,7 @@ function hojeLocal() {
 }
 
 function candidatosOrdenados(cidadaos: Cidadao[], regras: RegrasPrioridade, microarea: string | null, usados: Set<string>) {
-  const filtrados = cidadaos.filter((item) => (!microarea || item.microarea === microarea) && !usados.has(item.id));
+  const filtrados = cidadaos.filter((item) => mesmaMicroarea(item.microarea, microarea) && !usados.has(item.id));
   const prioridades = gerarPrioridades(filtrados, regras);
   const porId = new Map(filtrados.map((item) => [item.id, item]));
   const priorizados = prioridades.map((item) => ({ cidadao: porId.get(item.cidadaoId), motivo: item.categoria })).filter((item): item is { cidadao: Cidadao; motivo: string } => Boolean(item.cidadao));
@@ -22,7 +23,7 @@ function candidatosOrdenados(cidadaos: Cidadao[], regras: RegrasPrioridade, micr
 
 export async function criarRotina(meta: number, cidadaos: Cidadao[], regras: RegrasPrioridade, microarea: string | null) {
   const data = hojeLocal();
-  const existente = await db.rotinas.where("data").equals(data).first();
+  const existente = (await db.rotinas.where("data").equals(data).toArray()).find((item) => mesmaMicroarea(item.microarea, microarea));
   if (existente) return existente;
   const rotina: RotinaVisitas = { id: crypto.randomUUID(), data, microarea, meta, criadaEm: Date.now() };
   const selecionados = candidatosOrdenados(cidadaos, regras, microarea, new Set()).slice(0, meta);

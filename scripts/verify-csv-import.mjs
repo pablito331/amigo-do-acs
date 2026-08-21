@@ -20,6 +20,7 @@ for (const nome of nomes) {
 }
 
 const porLista = Object.fromEntries(resultados.map((item) => [item.listaTematica, { novos: item.novos, atualizados: item.atualizados, ignorados: item.ignorados }]));
-console.log(JSON.stringify({ arquivosProcessados: resultados.length, listas: porLista, cidadaosConsolidados: await db.cidadaos.count() }, null, 2));
+const cidadaos = await db.cidadaos.toArray();
+console.log(JSON.stringify({ arquivosProcessados: resultados.length, listas: porLista, cidadaosConsolidados: cidadaos.length, medidasReconhecidas: { peso: cidadaos.filter((item) => item.pesoKg !== null).length, altura: cidadaos.filter((item) => item.alturaCm !== null).length, pesoEAltura: cidadaos.filter((item) => item.pesoKg !== null && item.alturaCm !== null).length, bolsaFamilia: cidadaos.filter((item) => item.beneficiarioBolsaFamilia !== null).length } }, null, 2));
 
 await db.delete();
