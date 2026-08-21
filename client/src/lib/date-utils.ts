@@ -31,6 +31,14 @@ export function idadeEmAnos(valor: string | null | undefined, referencia = new D
   return idade;
 }
 
+export function idadeEmMeses(valor: string | null | undefined, referencia = new Date()): number | null {
+  const nascimento = paraData(valor);
+  if (!nascimento) return null;
+  let idade = (referencia.getFullYear() - nascimento.getFullYear()) * 12 + referencia.getMonth() - nascimento.getMonth();
+  if (referencia.getDate() < nascimento.getDate()) idade -= 1;
+  return Math.max(0, idade);
+}
+
 export function ehCrianca(dataNascimento: string | null | undefined, idadeStr: string | null | undefined, referencia = new Date()): boolean {
   const idadePorData = idadeEmAnos(dataNascimento, referencia);
   if (idadePorData !== null) return idadePorData < 12;

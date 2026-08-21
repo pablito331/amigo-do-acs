@@ -25,6 +25,20 @@ describe("priorização local para busca ativa", () => {
     expect(prioridades.some((item) => item.categoria === "Gestação e puerpério")).toBe(true);
   });
 
+  it("respeita a ativação local de cada categoria de prioridade", () => {
+    const cidadao = criarCidadao({ isDiabetico: true, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaDiabetes: null });
+    const regras = { ...CONFIGURACOES_PADRAO.regras, categoriasAtivas: { ...CONFIGURACOES_PADRAO.regras.categoriasAtivas, diabetes: false } };
+    expect(gerarPrioridades([cidadao], regras).some((item) => item.categoria === "Diabetes")).toBe(false);
+  });
+
+  it("prioriza puericultura abaixo da meta local quando a quantidade foi importada", () => {
+    const hoje = new Date();
+    const nascimento = new Date(hoje.getFullYear() - 1, hoje.getMonth(), hoje.getDate()).toLocaleDateString("pt-BR");
+    const cidadao = criarCidadao({ dataNascimento: nascimento, isCrianca: true, qtdConsultasAte24Meses: 8, dataPrimeiraConsultaInfantil: "01/01/2026" });
+    const prioridades = gerarPrioridades([cidadao], CONFIGURACOES_PADRAO.regras);
+    expect(prioridades.find((item) => item.categoria === "Puericultura")?.detalhe).toContain("8 consulta(s)");
+  });
+
   it("resume indicadores com denominadores locais", () => {
     const cidadao = criarCidadao({ isHipertenso: true, dataUltimaConsultaHipertensao: null, dataUltimaMedicaoPressao: null });
     const painel = calcularPainel([cidadao], [], CONFIGURACOES_PADRAO.regras);

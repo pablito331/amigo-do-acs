@@ -104,7 +104,9 @@
 - [x] Completar o manifesto do PWA com atalhos de instalação e validar a experiência instalada.
 - [x] Adicionar um seletor de período no painel da microárea para filtrar as visitas locais exibidas.
 - [x] Exibir na lista de cidadãos o resumo completo das recências PEC, mantendo distinção do histórico local.
-- [ ] Próxima versão: permitir iniciar uma conversa com o cidadão ao tocar no número de telefone, com escolha explícita do canal disponível.
+- [x] Próxima versão: permitir iniciar uma conversa com o cidadão ao tocar no número de telefone, com escolha explícita do canal disponível.
+- [x] Oferecer WhatsApp e SMS como opções visíveis de abertura de conversa, sem mensagem automática nem envio sem ação do ACS.
+- [x] Criar testes para a normalização segura do telefone e para os links de conversa do cidadão.
 - [x] Próxima versão: exibir notas de versão com itens corrigidos, incluídos e melhorados após cada publicação.
 - [x] Próxima versão: permitir compartilhar relatórios somente por ação visível e confirmação explícita, exibindo o destinatário e o conteúdo antes do envio.
 - [x] Aguardar o endereço de e-mail dedicado do usuário antes de configurar qualquer compartilhamento de relatórios.
@@ -123,6 +125,12 @@
 - [x] Próxima versão: apresentar notas de versão no aplicativo, informando correções, melhorias e recursos incluídos após cada publicação.
 - [x] Próxima versão: analisar duplicidades reais das listas PEC compartilhadas e ampliar os critérios de identificação sem excluir registros automaticamente.
 - [x] Corrigir o rastreador de duplicidades na tela de Indicadores para analisar toda a base importada, evitando que o filtro mestre oculte duplicados reais.
+- [x] Corrigir o rastreador para sempre sinalizar registros com nome normalizado e data de nascimento normalizada iguais, mesmo que CPF/CNS estejam presentes ou sejam diferentes.
+- [x] Validar a correção usando pares reais dos CSVs PEC e uma base importada no aplicativo.
+- [x] Importar uma amostra real dos CSVs PEC no IndexedDB, conferir o rastreador em Indicadores e registrar a evidência da validação.
+- [x] Documentar a relação entre a análise dos CSVs reais e o comportamento do rastreador após a importação local.
+- [x] Carregar os CSVs PEC reais na instância de validação visual e capturar a tela Indicadores com duplicidades por nome e nascimento.
+- [x] Confirmar novamente na documentação a ligação entre análise real, importação local e rastreador visível.
 - [x] Adicionar teste do fluxo de indicadores para garantir que duplicidades com identificadores diferentes permaneçam visíveis na interface.
 - [x] Próxima versão: evoluir o banco local para armazenar dias planejados de agenda, lembretes e o estado de atendimento de cada visita.
 - [x] Próxima versão: criar visualização de calendário e agenda diária de visitas por microárea.
@@ -135,3 +143,17 @@
 - [x] Validar visualmente e documentar o rastreador de duplicidades na tela Indicadores.
 - [x] Revisar o detalhe móvel do cidadão para garantir fechamento claro e acesso ao formulário/histórico de visitas.
 - [x] Capturar e documentar a abertura e o fechamento do detalhe contextual do cidadão em tela móvel.
+- [x] Mapear nos CSVs PEC os campos de consultas de puericultura e outros acompanhamentos de desenvolvimento infantil disponíveis.
+- [x] Importar e consolidar a quantidade de consultas infantis necessária para o indicador de crianças até dois anos.
+- [x] Exibir no painel uma busca ativa de crianças até dois anos com menos de nove consultas registradas, quando houver base de dados suficiente.
+- [x] Indicar claramente quando o CSV não trouxer o campo necessário, sem inferir consultas ausentes.
+- [x] Substituir o envio de resumo com destinatário fixo por escolha explícita de canal e destinatário pelo ACS.
+- [x] Permitir compartilhar o resumo semanal por e-mail ou WhatsApp, deixando o conteúdo visível antes da abertura do aplicativo escolhido.
+- [x] Ampliar as regras locais para ativar categorias de prioridade configuráveis com dados já presentes nos relatórios PEC.
+- [x] Permitir editar parâmetros de cada categoria configurada e aplicar as regras à lista de prioridades de visitas.
+- [x] Permitir adicionar, no perfil do cidadão, o paciente à agenda de visitas de uma data escolhida pelo ACS no calendário.
+- [x] Evitar duplicação ao incluir manualmente um cidadão já presente na agenda do dia.
+- [x] Substituir o seletor extenso de cidadãos pela visão dos compromissos, visitas, lembretes e tarefas do dia selecionado no calendário.
+- [x] Oferecer, a partir do dia selecionado, as ações de adicionar visita manualmente e montar agenda automática por prioridades.
+- [x] Manter a impressão da agenda diária e permitir compartilhá-la por WhatsApp com destinatário escolhido e conteúdo visível antes do envio.
+- [x] Exibir, junto da prioridade na lista de cidadãos, a recência da última visita domiciliar informada pelo PEC.

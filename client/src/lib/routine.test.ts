@@ -2,7 +2,7 @@ import "fake-indexeddb/auto";
 import { beforeEach, describe, expect, it } from "vitest";
 import { db } from "./acs-db";
 import { CONFIGURACOES_PADRAO, type Cidadao } from "./domain";
-import { adicionarLembrete, alternarLembrete, apagarLembrete, concluirItemRotina, criarRotina, iniciarAtendimento, salvarAnotacoesAtendimento } from "./routine";
+import { adicionarCidadaoNaAgenda, adicionarLembrete, alternarLembrete, apagarLembrete, concluirItemRotina, criarRotina, iniciarAtendimento, salvarAnotacoesAtendimento } from "./routine";
 
 const cidadao = (id: string): Cidadao => ({
   id, chave: id, nome: "Pessoa da Agenda", dataNascimento: "01/01/1980", idadeStr: "46", sexo: "Masculino", cpf: null, cns: null, microarea: "06", telefone: null, endereco: "Rua da Agenda", diasUltimoAtendimentoMedico: null, mesesUltimoAtendimentoMedico: null, diasUltimoAtendimentoEnfermagem: null, mesesUltimoAtendimentoEnfermagem: null, diasUltimoAtendimentoOdontologico: null, mesesUltimoAtendimentoOdontologico: null, mesesUltimaVisitaDomiciliar: 3, diasUltimaVisitaDomiciliar: 0, pesoKg: null, alturaCm: null, dataUltimaMedicaoPesoAltura: null, beneficiarioBolsaFamilia: null, vigenciaBolsaFamilia: null, registrosPesoAltura12Meses: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null, isMulher: false, examePreventivoUltimaAvaliacao: null, isGestante: false, igSemanas: null, qtdConsultasPreNatal: null, isHipertenso: false, isDiabetico: false, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaHipertensao: null, dataUltimaConsultaDiabetes: null, isIdoso: false, isCrianca: false, isSaudeBucal: false, fontes: ["Geral"], atualizadoEm: 0,
@@ -44,6 +44,19 @@ describe("agenda local de visitas", () => {
     const itens = await db.itensRotina.where("rotinaId").equals(rotina.id).toArray();
     expect(itens).toHaveLength(1);
     expect(itens[0]?.cidadaoId).toBe("segundo");
+  });
+
+  it("inclui um cidadão na data escolhida e não o repete quando a inclusão é refeita", async () => {
+    const pessoa = cidadao("manual");
+    await db.cidadaos.add(pessoa);
+    const primeira = await adicionarCidadaoNaAgenda(pessoa.id, 10, [pessoa], CONFIGURACOES_PADRAO.regras, "06", "2026-08-28");
+    const segunda = await adicionarCidadaoNaAgenda(pessoa.id, 10, [pessoa], CONFIGURACOES_PADRAO.regras, "06", "2026-08-28");
+    const itens = await db.itensRotina.where("rotinaId").equals(primeira.rotina.id).toArray();
+
+    expect(primeira.adicionada).toBe(true);
+    expect(segunda.adicionada).toBe(false);
+    expect(itens).toHaveLength(1);
+    expect(itens[0]).toMatchObject({ cidadaoId: pessoa.id, motivo: "Visita domiciliar" });
   });
 
   it("consolida múltiplas condições do mesmo cidadão em uma única visita", async () => {

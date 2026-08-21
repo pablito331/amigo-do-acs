@@ -53,6 +53,9 @@ export interface Cidadao {
   dataUltimaConsultaDiabetes: string | null;
   isIdoso: boolean;
   isCrianca: boolean;
+  qtdConsultasAte24Meses: number | null;
+  dataPrimeiraConsultaInfantil: string | null;
+  qtdMedicoesPesoAlturaAte24Meses: number | null;
   isSaudeBucal: boolean;
   fontes: ListaTematica[];
   atualizadoEm: number;
@@ -126,6 +129,21 @@ export interface RegrasPrioridade {
   mesesPreventivo: number;
   mesesDiabetes: number;
   mesesHipertensao: number;
+  mesesIdosoAtendimento: number;
+  mesesSaudeBucal: number;
+  metaConsultasPuericultura: number;
+  diasAcompanhamentoAntropometrico: number;
+  categoriasAtivas: {
+    visitaDomiciliar: boolean;
+    saudeMulher: boolean;
+    diabetes: boolean;
+    hipertensao: boolean;
+    gestacao: boolean;
+    puericultura: boolean;
+    antropometriaInfantil: boolean;
+    pessoaIdosa: boolean;
+    saudeBucal: boolean;
+  };
 }
 
 export interface ConfiguracoesLocais {
@@ -145,9 +163,33 @@ export const CONFIGURACOES_PADRAO: ConfiguracoesLocais = {
     mesesPreventivo: 36,
     mesesDiabetes: 6,
     mesesHipertensao: 6,
+    mesesIdosoAtendimento: 6,
+    mesesSaudeBucal: 12,
+    metaConsultasPuericultura: 9,
+    diasAcompanhamentoAntropometrico: 60,
+    categoriasAtivas: {
+      visitaDomiciliar: true,
+      saudeMulher: true,
+      diabetes: true,
+      hipertensao: true,
+      gestacao: true,
+      puericultura: true,
+      antropometriaInfantil: true,
+      pessoaIdosa: true,
+      saudeBucal: true,
+    },
   },
   atualizadoEm: Date.now(),
 };
+
+export function normalizarRegrasPrioridade(regras: Partial<RegrasPrioridade> | null | undefined): RegrasPrioridade {
+  const padrao = CONFIGURACOES_PADRAO.regras;
+  return {
+    ...padrao,
+    ...regras,
+    categoriasAtivas: { ...padrao.categoriasAtivas, ...(regras?.categoriasAtivas ?? {}) },
+  };
+}
 
 export type NivelPrioridade = "alta" | "media" | "atencao";
 

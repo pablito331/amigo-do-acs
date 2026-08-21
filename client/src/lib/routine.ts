@@ -45,6 +45,19 @@ export async function criarRotina(meta: number, cidadaos: Cidadao[], regras: Reg
   return rotina;
 }
 
+export async function adicionarCidadaoNaAgenda(cidadaoId: string, meta: number, cidadaos: Cidadao[], regras: RegrasPrioridade, microarea: string | null, data = hojeLocal()) {
+  let rotina = (await db.rotinas.where("data").equals(data).toArray()).find((item) => mesmaMicroarea(item.microarea, microarea));
+  if (!rotina) {
+    rotina = { id: crypto.randomUUID(), data, microarea, meta, criadaEm: Date.now() };
+    await db.rotinas.add(rotina);
+  }
+  const itens = await db.itensRotina.where("rotinaId").equals(rotina.id).toArray();
+  if (itens.some((item) => item.cidadaoId === cidadaoId)) return { rotina, adicionada: false };
+  const candidato = candidatosParaAgenda(cidadaos, regras, microarea).find((item) => item.cidadao.id === cidadaoId);
+  await db.itensRotina.add({ id: crypto.randomUUID(), rotinaId: rotina.id, cidadaoId, ordem: Math.max(...itens.map((item) => item.ordem), 0) + 1, status: "pendente", motivo: candidato?.motivo ?? "Adicionado manualmente pelo ACS", visitaId: null, substituiItemId: null, anotacoes: null, iniciadoEm: null, atualizadoEm: Date.now() });
+  return { rotina, adicionada: true };
+}
+
 export async function criarRotinasDaSemana(meta: number, cidadaos: Cidadao[], regras: RegrasPrioridade, microarea: string | null, referencia = new Date()) {
   const inicio = new Date(referencia);
   inicio.setHours(12, 0, 0, 0);

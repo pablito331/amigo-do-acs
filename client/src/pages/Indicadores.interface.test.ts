@@ -8,5 +8,7 @@ describe("interface do rastreador de duplicidades", () => {
     expect(fonte).toContain("duplicidadesParaRevisao(cidadaos)");
     expect(fonte).toContain("Possíveis duplicidades na base importada");
     expect(fonte).toContain("o filtro mestre não oculta esta conferência");
+    expect(fonte).toContain("useState(true)");
+    expect(fonte).toContain("Nascimento:");
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { encontrarPossiveisDuplicidades } from "./duplicates";
+import { encontrarPossiveisDuplicidades, normalizarDataNascimentoParaDuplicidade } from "./duplicates";
 import type { Cidadao } from "./domain";
 
 function cidadao(id: string, parcial: Partial<Cidadao>): Cidadao {
@@ -22,5 +22,15 @@ describe("possíveis duplicidades", () => {
     expect(grupos).toHaveLength(1);
     expect(grupos[0]?.criterio).toBe("Nome e nascimento");
     expect(grupos[0]?.cidadaos.map((item) => item.id).sort()).toEqual(["1", "2"]);
+  });
+
+  it("reconhece a mesma data de nascimento com e sem zeros à esquerda", () => {
+    const grupos = encontrarPossiveisDuplicidades([
+      cidadao("1", { nome: "João da Silva", dataNascimento: "1/2/2013", cpf: "11111111111" }),
+      cidadao("2", { nome: "JOAO DA SILVA", dataNascimento: "01/02/2013", cns: "700000000000000" }),
+    ]);
+    expect(grupos).toHaveLength(1);
+    expect(grupos[0]?.criterio).toBe("Nome e nascimento");
+    expect(normalizarDataNascimentoParaDuplicidade("1/2/2013")).toBe("2013-02-01");
   });
 });

@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import { CONFIGURACOES_PADRAO, type Cidadao, type ConfiguracoesLocais, type Importacao, type ItemRotinaVisita, type LembreteAgenda, type RotinaVisitas, type TarefaAtualizacaoPec, type Visita } from "./domain";
+import { CONFIGURACOES_PADRAO, normalizarRegrasPrioridade, type Cidadao, type ConfiguracoesLocais, type Importacao, type ItemRotinaVisita, type LembreteAgenda, type RotinaVisitas, type TarefaAtualizacaoPec, type Visita } from "./domain";
 
 export class AmigoAcsDb extends Dexie {
   cidadaos!: Table<Cidadao, string>;
@@ -53,14 +53,14 @@ export const db = new AmigoAcsDb();
 
 export async function obterConfiguracoes(): Promise<ConfiguracoesLocais> {
   const existentes = await db.configuracoes.get("configuracoes");
-  if (existentes) return existentes;
+  if (existentes) return { ...existentes, regras: normalizarRegrasPrioridade(existentes.regras) };
   const iniciais = { ...CONFIGURACOES_PADRAO, atualizadoEm: Date.now() };
   await db.configuracoes.put(iniciais);
   return iniciais;
 }
 
 export async function salvarConfiguracoes(dados: Omit<ConfiguracoesLocais, "chave" | "atualizadoEm">) {
-  await db.configuracoes.put({ chave: "configuracoes", ...dados, microareaAtiva: dados.microareaAtiva?.trim() || null, atualizadoEm: Date.now() });
+  await db.configuracoes.put({ chave: "configuracoes", ...dados, regras: normalizarRegrasPrioridade(dados.regras), microareaAtiva: dados.microareaAtiva?.trim() || null, atualizadoEm: Date.now() });
 }
 
 export async function registrarVisita(visita: Omit<Visita, "id" | "criadaEm">) {

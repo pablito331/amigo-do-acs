@@ -1,4 +1,4 @@
-import { estaNoMesAtual, mesesDesde } from "./date-utils";
+import { estaNoMesAtual, idadeEmMeses, mesesDesde } from "./date-utils";
 import type { Cidadao, IndicadorLocal, Prioridade, RegrasPrioridade, Visita } from "./domain";
 import { mesmaMicroarea } from "./microarea";
 import { gerarPrioridades } from "./priority";
@@ -16,6 +16,7 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
   visitasNaSemana: number;
   pecVisitaRecente: number;
   pecVisitaAtrasada: number;
+  puericulturaSemRegistro: number;
   domicilios: number;
 } {
   const base = cidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva));
@@ -27,6 +28,11 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
   const mulheres = base.filter((item) => item.isMulher);
   const idosos = base.filter((item) => item.isIdoso);
   const criancas = base.filter((item) => item.isCrianca);
+  const criancasAte24Meses = base.filter((item) => {
+    const idade = idadeEmMeses(item.dataNascimento);
+    return idade !== null && idade <= 24;
+  });
+  const criancasComConsultasInformadas = criancasAte24Meses.filter((item) => item.qtdConsultasAte24Meses !== null);
   const bucal = base.filter((item) => item.isSaudeBucal);
 
   const temPrioridade = (id: string, categoria: string) => prioridades.some((item) => item.cidadaoId === id && item.categoria === categoria);
@@ -36,6 +42,7 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
     indicador("hipertensao", "Hipertensão", "Pessoas sem pendência de consulta ou aferição de pressão.", hipertensao.filter((item) => !temPrioridade(item.id, "Hipertensão")).length, hipertensao.length),
     indicador("mulher", "Prevenção em saúde da mulher", "Mulheres sem pendência de rastreamento pela regra local.", mulheres.filter((item) => !temPrioridade(item.id, "Saúde da mulher")).length, mulheres.length),
     indicador("crianca", "Desenvolvimento infantil", "Crianças identificadas na lista temática importada.", criancas.length, criancas.length),
+    indicador("puericultura", "Puericultura até 24 meses", "Crianças de até 24 meses com nove ou mais consultas registradas no CSV de Desenvolvimento infantil.", criancasComConsultasInformadas.filter((item) => (item.qtdConsultasAte24Meses ?? 0) >= 9).length, criancasComConsultasInformadas.length),
     indicador("idoso", "Pessoa idosa", "Pessoas idosas identificadas na lista temática importada.", idosos.length, idosos.length),
     indicador("bucal", "Saúde bucal", "Cidadãos presentes na lista de saúde bucal importada.", bucal.length, bucal.length),
   ];
@@ -58,6 +65,7 @@ export function calcularPainel(cidadaos: Cidadao[], visitas: Visita[], regras: R
     visitasNaSemana: visitasLocaisDaSemana,
     pecVisitaRecente,
     pecVisitaAtrasada,
+    puericulturaSemRegistro: criancasAte24Meses.filter((item) => item.qtdConsultasAte24Meses === null).length,
     domicilios: enderecos.size,
   };
 }

@@ -102,7 +102,7 @@ function limparCamposDaLista(cidadao: Cidadao, lista: ListaTematica): Cidadao {
   if (lista === "Hipertensão") Object.assign(copia, { isHipertenso: false, dataUltimaConsultaHipertensao: null });
   if (lista === "Saúde da mulher") Object.assign(copia, { isMulher: false, examePreventivoUltimaAvaliacao: null });
   if (lista === "Pessoa idosa") copia.isIdoso = false;
-  if (lista === "Desenvolvimento infantil") copia.isCrianca = false;
+  if (lista === "Desenvolvimento infantil") Object.assign(copia, { isCrianca: false, qtdConsultasAte24Meses: null, dataPrimeiraConsultaInfantil: null, qtdMedicoesPesoAlturaAte24Meses: null });
   if (lista === "Saúde bucal") copia.isSaudeBucal = false;
   return copia;
 }
@@ -129,7 +129,12 @@ function aplicarLista(base: Cidadao, linha: LinhaCsv, lista: ListaTematica): Cid
     proximo.examePreventivoUltimaAvaliacao = normalizarTextoCsv(linha["Exame de rastreamento de câncer de colo de útero data última avaliação"]) ?? normalizarTextoCsv(linha["Exame de rastreamento de câncer de colo de útero última avaliação"]);
   }
   if (lista === "Pessoa idosa") proximo.isIdoso = true;
-  if (lista === "Desenvolvimento infantil") proximo.isCrianca = true;
+  if (lista === "Desenvolvimento infantil") {
+    proximo.isCrianca = true;
+    proximo.dataPrimeiraConsultaInfantil = normalizarTextoCsv(linha["Data da primeira consulta"]);
+    proximo.qtdConsultasAte24Meses = numeroCsv(linha["Quantidade de consultas até 24 meses"]);
+    proximo.qtdMedicoesPesoAlturaAte24Meses = numeroCsv(linha["Quantidade de medições de peso/altura simultâneas até 24 meses"]);
+  }
   if (lista === "Saúde bucal") proximo.isSaudeBucal = true;
   return proximo;
 }
@@ -140,7 +145,7 @@ function cidadaoNovo(chave: string): Cidadao {
     diasUltimoAtendimentoMedico: null, mesesUltimoAtendimentoMedico: null, diasUltimoAtendimentoEnfermagem: null, mesesUltimoAtendimentoEnfermagem: null, diasUltimoAtendimentoOdontologico: null, mesesUltimoAtendimentoOdontologico: null, mesesUltimaVisitaDomiciliar: null, diasUltimaVisitaDomiciliar: null, pesoKg: null, alturaCm: null, dataUltimaMedicaoPesoAltura: null, beneficiarioBolsaFamilia: null, vigenciaBolsaFamilia: null, registrosPesoAltura12Meses: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null,
     isMulher: false, examePreventivoUltimaAvaliacao: null, isGestante: false, igSemanas: null, qtdConsultasPreNatal: null,
     isHipertenso: false, isDiabetico: false, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaHipertensao: null, dataUltimaConsultaDiabetes: null,
-    isIdoso: false, isCrianca: false, isSaudeBucal: false, fontes: [], atualizadoEm: Date.now(),
+    isIdoso: false, isCrianca: false, qtdConsultasAte24Meses: null, dataPrimeiraConsultaInfantil: null, qtdMedicoesPesoAlturaAte24Meses: null, isSaudeBucal: false, fontes: [], atualizadoEm: Date.now(),
   };
 }
 
