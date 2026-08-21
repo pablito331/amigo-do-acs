@@ -160,3 +160,7 @@
 - [x] Reduzir o destaque visual das visitas registradas no Amigo do ACS no painel, preservando sua consulta sem competir com a busca ativa do PEC.
 - [x] Tornar os cards do painel clicáveis para abrir as listas ou detalhes correspondentes aos números exibidos.
 - [x] Permitir abrir as listas de cidadãos com recência PEC em dia ou em atraso a partir dos números da seção de visitas da microárea.
+- [x] Criar um histórico de versões numeradas na tela Sobre, com as versões mais recentes exibidas primeiro.
+- [x] Registrar para cada versão as melhorias, correções e recursos entregues de forma clara para o ACS.
+- [x] Permitir compartilhar, a partir do detalhe do cidadão, nome, endereço, microárea e telefone por WhatsApp.
+- [x] Exibir a prévia do resumo do cidadão e solicitar o WhatsApp do destinatário antes de abrir a conversa.
