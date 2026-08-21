@@ -10,7 +10,7 @@ import { CONFIGURACOES_PADRAO, type Cidadao, type Prioridade, type TipoVisita } 
 import { mesmaMicroarea } from "@/lib/microarea";
 import { classificarImcAdulto } from "@/lib/imc";
 import { gerarPrioridades } from "@/lib/priority";
-import { criarTarefaAtualizacaoPec } from "@/lib/routine";
+import { adicionarCidadaoNaAgenda, criarTarefaAtualizacaoPec } from "@/lib/routine";
 import { formatarRecenciaPec } from "@/lib/recencia";
 import { linkSmsCidadao, linkWhatsAppCidadao, linkWhatsAppResumoCidadao, textoResumoCidadao } from "@/lib/citizen-contact";
 
@@ -36,7 +36,18 @@ export function linhasResumoClinico(cidadao: Cidadao): [string, string][] {
 
 function ResumoClinico({ cidadao }: { cidadao: Cidadao }) {
   const linhas = linhasResumoClinico(cidadao);
-  return <div className="rounded-lg border border-blue-100 bg-[#f7fbff] p-3"><p className="text-xs font-bold uppercase tracking-wide text-[#0757a5]">Resumo clínico consolidado</p><dl className="mt-2 space-y-2 text-xs text-slate-600">{linhas.map(([rotulo, valor], indice) => <div key={`${rotulo}-${indice}`} className="flex justify-between gap-3"><dt>{rotulo}</dt><dd className="text-right font-semibold">{valor}</dd></div>)}{!linhas.length && <p>Não há condição temática identificada nas listas importadas.</p>}</dl><p className="mt-3 border-t border-blue-100 pt-3 text-[11px] leading-relaxed text-slate-500">Para incluir este cidadão na agenda, selecione o dia desejado no calendário e use “Adicionar cidadão”.</p></div>;
+  const [agendaAberta, setAgendaAberta] = useState(false);
+  const [dataAgenda, setDataAgenda] = useState(() => new Date().toISOString().slice(0, 10));
+  const todosCidadaos = useLiveQuery(() => db.cidadaos.toArray(), []) ?? [];
+  const configuracoes = useLiveQuery(() => db.configuracoes.get("configuracoes"), []);
+  const microareaAtiva = configuracoes?.microareaAtiva ?? null;
+  const cidadaosDaMicroarea = useMemo(() => todosCidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva)), [todosCidadaos, microareaAtiva]);
+  const adicionarNaAgenda = async () => {
+    const resultado = await adicionarCidadaoNaAgenda(cidadao.id, 10, cidadaosDaMicroarea, configuracoes?.regras ?? CONFIGURACOES_PADRAO.regras, microareaAtiva, dataAgenda);
+    toast.success(resultado.adicionada ? `${cidadao.nome} foi incluído(a) na agenda de ${new Date(`${dataAgenda}T12:00:00`).toLocaleDateString("pt-BR")}.` : `${cidadao.nome} já está na agenda deste dia.`);
+    if (resultado.adicionada) setAgendaAberta(false);
+  };
+  return <div className="rounded-lg border border-blue-100 bg-[#f7fbff] p-3"><p className="text-xs font-bold uppercase tracking-wide text-[#0757a5]">Resumo clínico consolidado</p><dl className="mt-2 space-y-2 text-xs text-slate-600">{linhas.map(([rotulo, valor], indice) => <div key={`${rotulo}-${indice}`} className="flex justify-between gap-3"><dt>{rotulo}</dt><dd className="text-right font-semibold">{valor}</dd></div>)}{!linhas.length && <p>Não há condição temática identificada nas listas importadas.</p>}</dl><button onClick={() => setAgendaAberta((atual) => !atual)} className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#9ebadf] bg-white px-3 py-2 text-xs font-bold text-[#0757a5] hover:bg-blue-50"><CalendarPlus className="h-3.5 w-3.5" />Adicionar à agenda em uma data</button>{agendaAberta && <div className="mt-3 rounded-lg border border-[#9ebadf] bg-white p-3"><p className="text-xs font-bold text-[#173d6d]">Escolha a data da visita</p><p className="mt-1 text-[11px] text-slate-600">O cidadão será incluído diretamente na agenda do dia, sem sair deste perfil.</p><input type="date" value={dataAgenda} onChange={(event) => setDataAgenda(event.target.value)} className="mt-3 h-9 w-full rounded-md border border-slate-300 px-2 text-xs outline-none focus:border-[#0757a5]" /><div className="mt-3 flex justify-end gap-2"><button onClick={() => setAgendaAberta(false)} className="rounded-md px-2.5 py-2 text-xs font-bold text-slate-600">Cancelar</button><button onClick={() => void adicionarNaAgenda()} className="inline-flex items-center gap-1.5 rounded-md bg-[#0757a5] px-3 py-2 text-xs font-bold text-white"><CalendarPlus className="h-3.5 w-3.5" />Adicionar no dia</button></div></div>}</div>;
 }
 
 async function solicitarAtualizacaoPec(cidadao: Cidadao) {

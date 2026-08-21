@@ -168,3 +168,6 @@
 - [x] Permitir escolher uma data e concluir a inclusão manual de um cidadão sem redirecionamentos repetidos.
 - [x] Abrir, no botão Adicionar cidadão do calendário, uma lista pesquisável para escolher o cidadão no próprio dia selecionado.
 - [x] Incluir o cidadão selecionado diretamente na agenda do dia, sem navegar entre as telas Cidadãos e Rotina.
+- [x] Atualizar o histórico da tela Sobre para identificar a correção da agenda pesquisável como versão 1.7.0.
+- [x] Registrar o botão de agenda por data no perfil do cidadão como versão 1.8.0 no histórico da tela Sobre.
+- [x] Restaurar no detalhe do cidadão um botão para escolher a data e incluí-lo diretamente na agenda, sem loop de redirecionamento.
