@@ -22,11 +22,15 @@ function corDaPrioridade(nivel: "alta" | "media" | "atencao") {
   return { cor: "bg-blue-500", descricao: "Prioridade de acompanhamento" };
 }
 
+function ehSexoFeminino(cidadao: Cidadao) {
+  return cidadao.isMulher || /femin|mulher/i.test(cidadao.sexo ?? "");
+}
+
 export function linhasResumoClinico(cidadao: Cidadao): [string, string][] {
   const eCrianca = ehCrianca(cidadao.dataNascimento, cidadao.idadeStr);
   return [
     ["Listas consolidadas", cidadao.fontes.length ? cidadao.fontes.join(" · ") : "Cadastro Geral"],
-    cidadao.isGestante && ["Gestação", `IG ${cidadao.igSemanas ?? "não informada"} · ${cidadao.qtdConsultasPreNatal ?? 0} consulta(s)`],
+    (ehSexoFeminino(cidadao) || cidadao.isGestante) && ["Gestação", cidadao.isGestante ? `Sim · IG ${cidadao.igSemanas ?? "não informada"} · ${cidadao.qtdConsultasPreNatal ?? 0} consulta(s)` : "Não"],
     cidadao.isDiabetico && ["Diabetes", `Hb: ${formatarData(cidadao.dataUltimaHemoglobinaGlicada)} · consulta: ${formatarData(cidadao.dataUltimaConsultaDiabetes)}`],
     cidadao.isHipertenso && ["Hipertensão", `PA: ${formatarData(cidadao.dataUltimaMedicaoPressao)} · consulta: ${formatarData(cidadao.dataUltimaConsultaHipertensao)}`],
     cidadao.isMulher && ["Rastreamento", formatarData(cidadao.examePreventivoUltimaAvaliacao)],

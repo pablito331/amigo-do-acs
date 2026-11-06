@@ -17,4 +17,14 @@ describe("linhasResumoClinico", () => {
     expect(linhas).toContainEqual(["Diabetes", "Hb: Não informado · consulta: Não informado"]);
     expect(linhas).toContainEqual(["Acompanhamento infantil", "Identificado pela idade no cadastro Geral"]);
   });
+
+  it("informa explicitamente quando uma cidadã não está gestante", () => {
+    const linhas = linhasResumoClinico(cidadaoBase());
+    expect(linhas).toContainEqual(["Gestação", "Não"]);
+  });
+
+  it("informa gestação, idade gestacional e consultas quando o cadastro indica gestante", () => {
+    const linhas = linhasResumoClinico({ ...cidadaoBase(), isGestante: true, igSemanas: "20", qtdConsultasPreNatal: 5 });
+    expect(linhas).toContainEqual(["Gestação", "Sim · IG 20 · 5 consulta(s)"]);
+  });
 });
