@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Baby, BadgeCheck, CalendarPlus, CircleAlert, ClipboardCheck, MapPin, MessageCircle, MessageSquare, Phone, Ruler, Scale, Search, SlidersHorizontal, UserRound, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { db, obterConfiguracoes, registrarVisita } from "@/lib/acs-db";
@@ -143,12 +143,16 @@ function DetalheMovel({ cidadao, prioridade, onFechar }: { cidadao: Cidadao; pri
 }
 
 function CampoBuscaCidadaos({ onBuscaChange }: { onBuscaChange: (valor: string) => void }) {
-  const [valor, setValor] = useState("");
+  const timerRef = useRef<number | null>(null);
   useEffect(() => {
-    const timer = window.setTimeout(() => onBuscaChange(valor), 180);
-    return () => window.clearTimeout(timer);
-  }, [onBuscaChange, valor]);
-  return <label className="relative block"><Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" /><input value={valor} onChange={(event) => setValor(event.target.value)} className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-[#0757a5] focus:ring-2 focus:ring-blue-100" placeholder="Buscar por nome, CNS, CPF, endereço ou situação de saúde" /></label>;
+    return () => { if (timerRef.current !== null) window.clearTimeout(timerRef.current); };
+  }, []);
+  const agendarBusca = (event: ChangeEvent<HTMLInputElement>) => {
+    const valor = event.currentTarget.value;
+    if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => onBuscaChange(valor), 180);
+  };
+  return <label className="relative block"><Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" /><input defaultValue="" onChange={agendarBusca} className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-[#0757a5] focus:ring-2 focus:ring-blue-100" placeholder="Buscar por nome, CNS, CPF, endereço ou situação de saúde" /></label>;
 }
 
 export default function Cidadaos() {
