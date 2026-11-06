@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Baby, BadgeCheck, CalendarPlus, CircleAlert, ClipboardCheck, MapPin, MessageCircle, MessageSquare, Phone, Ruler, Scale, Search, SlidersHorizontal, UserRound, X } from "lucide-react";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { db, obterConfiguracoes, registrarVisita } from "@/lib/acs-db";
@@ -142,6 +142,15 @@ function DetalheMovel({ cidadao, prioridade, onFechar }: { cidadao: Cidadao; pri
   return <div className="md:hidden border-t border-blue-100 bg-[#f7fbff] px-4 py-4"><div className="flex items-center justify-between gap-3"><p className="text-xs font-bold uppercase tracking-wide text-[#0757a5]">Detalhes do cidadão</p><div className="flex items-center gap-2"><LinhaPesoAltura cidadao={cidadao} /><button onClick={onFechar} aria-label="Fechar detalhes do cidadão" className="rounded-md p-1 text-slate-500 hover:bg-white"><X className="h-4 w-4" /></button></div></div><div className="mt-3 space-y-3"><ResumoClinico cidadao={cidadao} /><ResumoRecenciasPec cidadao={cidadao} /><MedidasEAcompanhamento cidadao={cidadao} /><AcoesConversa cidadao={cidadao} />{prioridade && <div className="rounded-lg border border-amber-200 bg-amber-50 p-3"><p className="flex items-center text-xs font-bold text-amber-900"><span className={`mr-2 h-2.5 w-2.5 rounded-full ${corDaPrioridade(prioridade.nivel).cor}`} title={corDaPrioridade(prioridade.nivel).descricao}><span className="sr-only">{corDaPrioridade(prioridade.nivel).descricao}</span></span>{prioridade.categoria}</p><p className="mt-1 text-xs text-amber-800">{prioridade.detalhe}</p></div>}<button onClick={() => void solicitarAtualizacaoPec(cidadao)} className="w-full rounded-lg border border-[#9ebadf] bg-white px-3 py-2 text-xs font-bold text-[#0757a5] hover:bg-blue-50">Atualizar cidadão no PEC</button><a href="#registro-visita" className="block w-full rounded-lg bg-[#0757a5] px-3 py-2 text-center text-xs font-bold text-white">Registrar uma visita</a></div></div>;
 }
 
+function CampoBuscaCidadaos({ onBuscaChange }: { onBuscaChange: (valor: string) => void }) {
+  const [valor, setValor] = useState("");
+  useEffect(() => {
+    const timer = window.setTimeout(() => onBuscaChange(valor), 180);
+    return () => window.clearTimeout(timer);
+  }, [onBuscaChange, valor]);
+  return <label className="relative block"><Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" /><input value={valor} onChange={(event) => setValor(event.target.value)} className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-[#0757a5] focus:ring-2 focus:ring-blue-100" placeholder="Buscar por nome, CNS, CPF, endereço ou situação de saúde" /></label>;
+}
+
 export default function Cidadaos() {
   const [localizacao] = useLocation();
   const [busca, setBusca] = useState("");
@@ -160,8 +169,7 @@ export default function Cidadaos() {
   const cidadaosDaMicroarea = useMemo(() => cidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva)), [cidadaos, microareaAtiva]);
   const prioridades = useMemo(() => gerarPrioridades(cidadaosDaMicroarea, configuracoes?.regras ?? CONFIGURACOES_PADRAO.regras), [cidadaosDaMicroarea, configuracoes?.regras]);
   const prioridadePorId = useMemo(() => new Map(prioridades.map((item) => [item.cidadaoId, item])), [prioridades]);
-  const buscaAdiada = useDeferredValue(busca);
-  const consultaNormalizada = useMemo(() => buscaAdiada.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(), [buscaAdiada]);
+  const consultaNormalizada = useMemo(() => busca.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(), [busca]);
   const textoPesquisavelPorId = useMemo(() => new Map(cidadaosDaMicroarea.map((item) => [item.id, [item.nome, item.cns, item.cpf, item.endereco, item.microarea, item.fontes.join(" ")].filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()])), [cidadaosDaMicroarea]);
   const selecionado = cidadaosDaMicroarea.find((item) => item.id === selecionadoId) ?? null;
   const prioridadeAtual = selecionado ? prioridadePorId.get(selecionado.id) : undefined;
@@ -210,7 +218,7 @@ export default function Cidadaos() {
   return <section className="mx-auto max-w-[1280px] pb-16 lg:pb-0">
     <div className="mb-7"><p className="text-xs font-bold uppercase tracking-[0.12em] text-[#0757a5]">Cadastro local</p><h1 className="mt-1 text-3xl font-bold tracking-tight text-[#172b4d]">Cidadãos da microárea</h1><p className="mt-2 text-sm text-slate-600">Consulte os registros importados, identifique prioridades e registre visitas diretamente neste dispositivo.</p></div>
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_3px_13px_rgba(25,54,95,0.04)] sm:p-5">
-      <div className="grid gap-3 md:grid-cols-[1fr_auto]"><label className="relative block"><Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" /><input value={busca} onChange={(event) => setBusca(event.target.value)} className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-[#0757a5] focus:ring-2 focus:ring-blue-100" placeholder="Buscar por nome, CNS, CPF, endereço ou situação de saúde" /></label><label className="flex h-10 items-center gap-2 rounded-lg border border-slate-300 px-3 text-sm text-slate-600"><SlidersHorizontal className="h-4 w-4 text-[#0757a5]" /><select value={filtro} onChange={(event) => setFiltro(event.target.value)} className="min-w-[180px] bg-transparent outline-none"><option value="todos">Todos os cidadãos</option><option value="prioridades">Com prioridade</option><option value="visitas-atrasadas">Visita PEC em atraso</option><option value="visitas-em-dia">Visita PEC em dia</option><option value="gestantes">Gestantes</option><option value="diabetes">Diabetes</option><option value="hipertensao">Hipertensão</option><option value="mulheres">Saúde da mulher</option><option value="criancas">Crianças</option><option value="puericultura-pendente">Puericultura: menos de 9 consultas</option><option value="idosos">Pessoa idosa</option><option value="bucal">Saúde bucal</option></select></label></div>
+      <div className="grid gap-3 md:grid-cols-[1fr_auto]"><CampoBuscaCidadaos onBuscaChange={setBusca} /><label className="flex h-10 items-center gap-2 rounded-lg border border-slate-300 px-3 text-sm text-slate-600"><SlidersHorizontal className="h-4 w-4 text-[#0757a5]" /><select value={filtro} onChange={(event) => setFiltro(event.target.value)} className="min-w-[180px] bg-transparent outline-none"><option value="todos">Todos os cidadãos</option><option value="prioridades">Com prioridade</option><option value="visitas-atrasadas">Visita PEC em atraso</option><option value="visitas-em-dia">Visita PEC em dia</option><option value="gestantes">Gestantes</option><option value="diabetes">Diabetes</option><option value="hipertensao">Hipertensão</option><option value="mulheres">Saúde da mulher</option><option value="criancas">Crianças</option><option value="puericultura-pendente">Puericultura: menos de 9 consultas</option><option value="idosos">Pessoa idosa</option><option value="bucal">Saúde bucal</option></select></label></div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500"><label className="flex items-center gap-2 font-semibold text-slate-600">Ordenar por<select value={ordenacao} onChange={(event) => setOrdenacao(event.target.value as typeof ordenacao)} className="h-8 rounded-md border border-slate-300 bg-white px-2 text-xs font-normal outline-none focus:border-[#0757a5]"><option value="nome">Nome (A–Z)</option><option value="prioridade">Prioridade</option><option value="endereco">Endereço</option><option value="acompanhamento">Acompanhamento</option></select></label><span>{microareaAtiva ? `Filtro mestre: Microárea ${microareaAtiva}` : "Filtro mestre: Todas as microáreas"}</span><span>{filtrados.length} cidadão(ãos) encontrado(s)</span><span>{prioridades.length} prioridade(s) com as regras atuais</span></div>
     </div>
     <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_390px]">
