@@ -71,6 +71,7 @@ function valoresBase(linha: LinhaCsv): Partial<Cidadao> {
     dataNascimento: normalizarTextoCsv(linha["Data de nascimento"]),
     idadeStr: normalizarTextoCsv(linha["Idade"]),
     sexo: normalizarTextoCsv(linha["Sexo"]),
+    racaCor: normalizarTextoCsv(linha["Sexo, identidade de gênero e raça/cor"]),
     cpf: normalizarIdentificador(normalizarTextoCsv(linha["CPF"])),
     cns: normalizarIdentificador(normalizarTextoCsv(linha["CNS"])),
     microarea: normalizarTextoCsv(linha["Microárea"]),
@@ -113,30 +114,97 @@ function aplicarLista(base: Cidadao, linha: LinhaCsv, lista: ListaTematica): Cid
   if (lista === "Gestação e puerpério") {
     proximo.isGestante = true;
     proximo.dataDum = normalizarTextoCsv(linha["DUM"]) ?? normalizarTextoCsv(linha["Data da última menstruação"]);
+    proximo.dppDum = normalizarTextoCsv(linha["DPP (DUM)"]);
     proximo.igSemanas = normalizarTextoCsv(linha["IG (ecografia obstétrica) (semanas)"]) ?? normalizarTextoCsv(linha["IG (DUM) (semanas)"]);
+    proximo.igEcografiaSemanas = normalizarTextoCsv(linha["IG (ecografia obstétrica)"]) ?? normalizarTextoCsv(linha["IG (ecografia obstétrica) (semanas)"]);
+    proximo.dppEcografia = normalizarTextoCsv(linha["DPP (ecografia obstétrica)"]);
     proximo.qtdConsultasPreNatal = numeroCsv(linha["Quantidade de atendimentos no pré-natal"]);
+    proximo.qtdConsultasAte12Semanas = numeroCsv(linha["Consultas até 12 semanas"]);
+    proximo.dataUltimaConsultaGestacao = normalizarTextoCsv(linha["Última consulta"]);
+    proximo.qtdConsultasOdontologicasGestacao = numeroCsv(linha["Consultas odontológicas"]);
+    proximo.vacinaDtpa = normalizarTextoCsv(linha["dTpa"]);
+    proximo.qtdRegistrosAlturaUterina = numeroCsv(linha["Registros de altura uterina"]);
+    proximo.qtdRegistrosPressaoGestacao = numeroCsv(linha["Registros de pressão arterial"]);
+    proximo.qtdRegistrosPesoAlturaGestacao = numeroCsv(linha["Registros de peso e altura simultâneos"]);
+    proximo.examesGestacao = {
+      hiv1Trimestre: normalizarTextoCsv(linha["HIV (1º trimestre)"]),
+      sifilis1Trimestre: normalizarTextoCsv(linha["Sífilis (1º trimestre)"]),
+      hepatiteB1Trimestre: normalizarTextoCsv(linha["Hepatite B (1º trimestre)"]),
+      hepatiteC1Trimestre: normalizarTextoCsv(linha["Hepatite C (1º trimestre)"]),
+      hiv3Trimestre: normalizarTextoCsv(linha["HIV (3º trimestre)"]),
+      sifilis3Trimestre: normalizarTextoCsv(linha["Sífilis (3º trimestre)"]),
+    };
+    proximo.qtdVisitasPrenatal = numeroCsv(linha["Pré-natal"]);
+    proximo.qtdVisitasPuerperio = numeroCsv(linha["Puerpério"]);
+    proximo.qtdConsultasPuerperio = numeroCsv(linha["Consultas"]);
+    proximo.dataUltimaConsultaPuerperio = normalizarTextoCsv(linha["Última consulta"]);
   }
   if (lista === "Diabetes") {
     proximo.isDiabetico = true;
     proximo.dataUltimaHemoglobinaGlicada = normalizarTextoCsv(linha["Data da última solicitação de hemoglobina glicada"]) ?? normalizarTextoCsv(linha["Data da última avaliação de hemoglobina glicada"]);
     proximo.dataUltimaConsultaDiabetes = normalizarTextoCsv(linha["Data da última consulta"]);
+    proximo.qtdConsultasDiabetes = numeroCsv(linha["Consultas (últimos 36 meses)"]);
+    proximo.valorUltimaHemoglobinaGlicada = normalizarTextoCsv(linha["Hemoglobina glicada (última avaliação)"]);
+    proximo.avaliacaoPesDiabetes = normalizarTextoCsv(linha["Avaliação dos pés"]);
+    proximo.qtdVisitasDiabetes = numeroCsv(linha["Quantidade"]);
+    proximo.ultimasVisitasDiabetes = normalizarTextoCsv(linha["Últimas visitas"]);
   }
   if (lista === "Hipertensão") {
     proximo.isHipertenso = true;
     proximo.dataUltimaConsultaHipertensao = normalizarTextoCsv(linha["Data da última consulta"]);
+    proximo.qtdConsultasHipertensao = numeroCsv(linha["Consultas (últimos 36 meses)"]);
+    proximo.qtdMedicoesPressaoHipertensao = numeroCsv(linha["Medições de P.A. (últimos 36 meses)"]);
+    proximo.qtdVisitasHipertensao = numeroCsv(linha["Quantidade"]);
+    proximo.ultimasVisitasHipertensao = normalizarTextoCsv(linha["Últimas visitas"]);
   }
   if (lista === "Saúde da mulher") {
     proximo.isMulher = true;
     proximo.examePreventivoUltimaAvaliacao = normalizarTextoCsv(linha["Exame de rastreamento de câncer de colo de útero data última avaliação"]) ?? normalizarTextoCsv(linha["Exame de rastreamento de câncer de colo de útero última avaliação"]);
+    proximo.dataUltimaConsultaSaudeMulher = normalizarTextoCsv(linha["Última consulta"]);
+    proximo.avaliacaoHiv = normalizarTextoCsv(linha["HIV"]);
+    proximo.avaliacaoSifilis = normalizarTextoCsv(linha["Sífilis"]);
+    proximo.avaliacaoHepatiteB = normalizarTextoCsv(linha["Hepatite B"]);
+    proximo.avaliacaoHepatiteC = normalizarTextoCsv(linha["Hepatite C"]);
+    proximo.dataUltimaSolicitacaoPreventivo = normalizarTextoCsv(linha["Última solicitação"]);
+    proximo.detalhesUltimaAvaliacaoPreventivo = normalizarTextoCsv(linha["Última avaliação"]);
+    proximo.rastreioCancerMama = normalizarTextoCsv(linha["Rastreio para câncer de mama"]);
+    proximo.vacinaHpv = normalizarTextoCsv(linha["HPV"]);
   }
   if (lista === "Pessoa idosa") proximo.isIdoso = true;
   if (lista === "Desenvolvimento infantil") {
     proximo.isCrianca = true;
     proximo.dataPrimeiraConsultaInfantil = normalizarTextoCsv(linha["Data da primeira consulta"]);
+    proximo.idadePrimeiraConsultaInfantil = normalizarTextoCsv(linha["Idade na primeira consulta"]);
     proximo.qtdConsultasAte24Meses = numeroCsv(linha["Quantidade de consultas até 24 meses"]);
     proximo.qtdMedicoesPesoAlturaAte24Meses = numeroCsv(linha["Quantidade de medições de peso/altura simultâneas até 24 meses"]);
+    proximo.vacinasInfantis = normalizarTextoCsv(linha["Difteria, Tétano, Pertusis, Hepatite B, Haemophilus Influenza B"]) ?? normalizarTextoCsv(linha["Poliomielite"]);
+    proximo.ultimaSuplementacaoVitaminaA = normalizarTextoCsv(linha["Última suplementação"]);
+    proximo.idadeUltimaSuplementacaoVitaminaA = normalizarTextoCsv(linha["Idade na última suplementação"]);
+    proximo.dosesVitaminaA6a11 = numeroCsv(linha["Doses de 6 a 11 meses"]);
+    proximo.dosesVitaminaA12a23 = numeroCsv(linha["Doses de 12 a 23 meses"]);
+    proximo.dosesVitaminaA24a59 = numeroCsv(linha["Doses de 24 a 59 meses"]);
+    proximo.qtdVisitasAte24Meses = numeroCsv(linha["Até 24 meses (quantidade)"]);
+    proximo.primeiraVisitaAte24Meses = normalizarTextoCsv(linha["Primeira visita"]);
+    proximo.segundaVisitaAte24Meses = normalizarTextoCsv(linha["Segunda visita"]);
   }
-  if (lista === "Saúde bucal") proximo.isSaudeBucal = true;
+  if (lista === "Pessoa idosa") {
+    proximo.isIdoso = true;
+    proximo.vacinaInfluenzaIdoso = normalizarTextoCsv(linha["Influenza (últimos 12 meses)"]);
+    proximo.ivcfRisco = normalizarTextoCsv(linha["Risco"]);
+    proximo.ivcfRegistradoEm = normalizarTextoCsv(linha["Registrado em"]);
+    proximo.ivcfDimensoesAlteradas = normalizarTextoCsv(linha["Dimensões alteradas"]);
+    proximo.qtdVisitasIdoso = numeroCsv(linha["Quantidade"]);
+    proximo.ultimasVisitasIdoso = normalizarTextoCsv(linha["Últimas visitas"]);
+  }
+  if (lista === "Saúde bucal") {
+    proximo.isSaudeBucal = true;
+    proximo.dataPrimeiraConsultaBucal = normalizarTextoCsv(linha["Primeira consulta"]);
+    proximo.tratamentoOdontologicoConcluido = normalizarTextoCsv(linha["Tratamento odontológico concluído"]);
+    proximo.ultimoTratamentoRestaurador = normalizarTextoCsv(linha["Último tratamento restaurador atraumático"]);
+    proximo.escovacaoSupervisionada = normalizarTextoCsv(linha["Registro de escovação supervisionada em atividade coletiva"]);
+    proximo.exodontiasPermanentes = normalizarTextoCsv(linha["Exodontias de dentes realizadas (permanentes)"]);
+    proximo.procedimentosOdontologicosPreventivos = normalizarTextoCsv(linha["Procedimentos odontológicos preventivos"]);
+  }
   return proximo;
 }
 
