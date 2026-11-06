@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Baby, BadgeCheck, CalendarPlus, CircleAlert, ClipboardCheck, MapPin, MessageCircle, MessageSquare, Phone, Ruler, Scale, Search, SlidersHorizontal, UserRound, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { db, obterConfiguracoes, registrarVisita } from "@/lib/acs-db";
@@ -150,7 +150,12 @@ function CampoBuscaCidadaos({ onBuscaChange }: { onBuscaChange: (valor: string) 
   const agendarBusca = (event: ChangeEvent<HTMLInputElement>) => {
     const valor = event.currentTarget.value;
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
-    timerRef.current = window.setTimeout(() => onBuscaChange(valor), 180);
+    timerRef.current = window.setTimeout(() => {
+      const atualizarLista = () => startTransition(() => onBuscaChange(valor));
+      const requestIdleCallback = (window as Window & { requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number }).requestIdleCallback;
+      if (requestIdleCallback) requestIdleCallback(atualizarLista, { timeout: 800 });
+      else globalThis.setTimeout(atualizarLista, 0);
+    }, 500);
   };
   return <label className="relative block"><Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" /><input defaultValue="" onChange={agendarBusca} className="h-10 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-[#0757a5] focus:ring-2 focus:ring-blue-100" placeholder="Buscar por nome, CNS, CPF, endereço ou situação de saúde" /></label>;
 }
