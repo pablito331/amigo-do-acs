@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Baby, BadgeCheck, CalendarPlus, CircleAlert, ClipboardCheck, MapPin, MessageCircle, MessageSquare, Phone, Ruler, Scale, Search, SlidersHorizontal, UserRound, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { db, obterConfiguracoes, registrarVisita } from "@/lib/acs-db";
@@ -160,6 +160,9 @@ export default function Cidadaos() {
   const cidadaosDaMicroarea = useMemo(() => cidadaos.filter((item) => mesmaMicroarea(item.microarea, microareaAtiva)), [cidadaos, microareaAtiva]);
   const prioridades = useMemo(() => gerarPrioridades(cidadaosDaMicroarea, configuracoes?.regras ?? CONFIGURACOES_PADRAO.regras), [cidadaosDaMicroarea, configuracoes?.regras]);
   const prioridadePorId = useMemo(() => new Map(prioridades.map((item) => [item.cidadaoId, item])), [prioridades]);
+  const buscaAdiada = useDeferredValue(busca);
+  const consultaNormalizada = useMemo(() => buscaAdiada.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(), [buscaAdiada]);
+  const textoPesquisavelPorId = useMemo(() => new Map(cidadaosDaMicroarea.map((item) => [item.id, [item.nome, item.cns, item.cpf, item.endereco, item.microarea, item.fontes.join(" ")].filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()])), [cidadaosDaMicroarea]);
   const selecionado = cidadaosDaMicroarea.find((item) => item.id === selecionadoId) ?? null;
   const prioridadeAtual = selecionado ? prioridadePorId.get(selecionado.id) : undefined;
 
@@ -174,17 +177,15 @@ export default function Cidadaos() {
   }, [cidadaos, localizacao]);
   useEffect(() => { void obterConfiguracoes(); }, []);
 
-  const filtrados = cidadaosDaMicroarea.filter((item) => {
-    const consulta = busca.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-    const pesquisavel = [item.nome, item.cns, item.cpf, item.endereco, item.microarea, item.fontes.join(" ")].filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    const corresponde = !consulta || pesquisavel.includes(consulta);
+  const filtrados = useMemo(() => cidadaosDaMicroarea.filter((item) => {
+    const corresponde = !consultaNormalizada || textoPesquisavelPorId.get(item.id)?.includes(consultaNormalizada);
     const temPrioridade = prioridadePorId.has(item.id);
     const mesesAtrasada = configuracoes?.regras.mesesVisitaAtrasada ?? CONFIGURACOES_PADRAO.regras.mesesVisitaAtrasada;
     const visitaEmDia = item.diasUltimaVisitaDomiciliar !== null ? item.diasUltimaVisitaDomiciliar <= 30 : item.mesesUltimaVisitaDomiciliar === 0;
     const visitaAtrasada = item.mesesUltimaVisitaDomiciliar !== null ? item.mesesUltimaVisitaDomiciliar >= mesesAtrasada : (item.diasUltimaVisitaDomiciliar ?? 0) > 60;
     const grupo = filtro === "todos" || (filtro === "prioridades" && temPrioridade) || (filtro === "gestantes" && item.isGestante) || (filtro === "diabetes" && item.isDiabetico) || (filtro === "hipertensao" && item.isHipertenso) || (filtro === "mulheres" && item.isMulher) || (filtro === "criancas" && ehCrianca(item.dataNascimento, item.idadeStr)) || (filtro === "puericultura-pendente" && (idadeEmMeses(item.dataNascimento) ?? Infinity) <= 24 && item.qtdConsultasAte24Meses !== null && item.qtdConsultasAte24Meses < 9) || (filtro === "visitas-em-dia" && visitaEmDia) || (filtro === "visitas-atrasadas" && visitaAtrasada) || (filtro === "idosos" && item.isIdoso) || (filtro === "bucal" && item.isSaudeBucal);
     return corresponde && grupo;
-  });
+  }), [cidadaosDaMicroarea, consultaNormalizada, textoPesquisavelPorId, prioridadePorId, filtro, configuracoes?.regras.mesesVisitaAtrasada]);
   const ordenados = useMemo(() => [...filtrados].sort((a, b) => {
     if (ordenacao === "prioridade") {
       const pesos = { alta: 0, media: 1, atencao: 2, nenhuma: 3 };
