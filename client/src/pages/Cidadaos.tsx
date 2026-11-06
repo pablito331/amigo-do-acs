@@ -81,7 +81,9 @@ function LinhaPesoAltura({ cidadao }: { cidadao: Cidadao }) {
   const altura = cidadao.alturaCm ?? null;
   if (peso === null && altura === null) return null;
   const partes = [peso !== null ? `${peso.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} kg` : null, altura !== null ? `${altura} cm` : null].filter(Boolean);
-  return <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-800"><Scale className="h-3.5 w-3.5 shrink-0" /><span>Peso/altura: {partes.join(" / ")}{cidadao.dataUltimaMedicaoPesoAltura ? ` em ${formatarData(cidadao.dataUltimaMedicaoPesoAltura)}` : ""}</span></p>;
+  const acompanhamento = avaliarAcompanhamentoAntropometrico(cidadao);
+  const cor = acompanhamento.situacao === "em-dia" ? "text-emerald-800" : acompanhamento.situacao === "atencao" ? "text-amber-700" : "text-red-700";
+  return <p title={acompanhamento.descricao} className={`mt-2 flex items-center gap-1.5 text-xs font-semibold ${cor}`}><Scale className="h-3.5 w-3.5 shrink-0" /><span>Peso/altura: {partes.join(" / ")}{cidadao.dataUltimaMedicaoPesoAltura ? ` em ${formatarData(cidadao.dataUltimaMedicaoPesoAltura)}` : ""}</span></p>;
 }
 
 
