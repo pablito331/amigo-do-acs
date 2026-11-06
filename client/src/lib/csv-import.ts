@@ -97,7 +97,7 @@ function valoresBase(linha: LinhaCsv): Partial<Cidadao> {
 
 function limparCamposDaLista(cidadao: Cidadao, lista: ListaTematica): Cidadao {
   const copia = { ...cidadao, fontes: cidadao.fontes.filter((fonte) => fonte !== lista) };
-  if (lista === "Gestação e puerpério") Object.assign(copia, { isGestante: false, igSemanas: null, qtdConsultasPreNatal: null });
+  if (lista === "Gestação e puerpério") Object.assign(copia, { isGestante: false, dataDum: null, igSemanas: null, qtdConsultasPreNatal: null });
   if (lista === "Diabetes") Object.assign(copia, { isDiabetico: false, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaDiabetes: null });
   if (lista === "Hipertensão") Object.assign(copia, { isHipertenso: false, dataUltimaConsultaHipertensao: null });
   if (lista === "Saúde da mulher") Object.assign(copia, { isMulher: false, examePreventivoUltimaAvaliacao: null });
@@ -112,6 +112,7 @@ function aplicarLista(base: Cidadao, linha: LinhaCsv, lista: ListaTematica): Cid
   const proximo: Cidadao = { ...base, ...valoresBase(linha), fontes, atualizadoEm: Date.now() };
   if (lista === "Gestação e puerpério") {
     proximo.isGestante = true;
+    proximo.dataDum = normalizarTextoCsv(linha["DUM"]) ?? normalizarTextoCsv(linha["Data da última menstruação"]);
     proximo.igSemanas = normalizarTextoCsv(linha["IG (ecografia obstétrica) (semanas)"]) ?? normalizarTextoCsv(linha["IG (DUM) (semanas)"]);
     proximo.qtdConsultasPreNatal = numeroCsv(linha["Quantidade de atendimentos no pré-natal"]);
   }
@@ -143,7 +144,7 @@ function cidadaoNovo(chave: string): Cidadao {
   return {
     id: crypto.randomUUID(), chave, nome: "Cidadão sem nome", dataNascimento: null, idadeStr: null, sexo: null, cpf: null, cns: null, microarea: null, telefone: null, endereco: null,
     diasUltimoAtendimentoMedico: null, mesesUltimoAtendimentoMedico: null, diasUltimoAtendimentoEnfermagem: null, mesesUltimoAtendimentoEnfermagem: null, diasUltimoAtendimentoOdontologico: null, mesesUltimoAtendimentoOdontologico: null, mesesUltimaVisitaDomiciliar: null, diasUltimaVisitaDomiciliar: null, pesoKg: null, alturaCm: null, dataUltimaMedicaoPesoAltura: null, beneficiarioBolsaFamilia: null, vigenciaBolsaFamilia: null, registrosPesoAltura12Meses: null, ultimaMedicaoPressao: null, dataUltimaMedicaoPressao: null,
-    isMulher: false, examePreventivoUltimaAvaliacao: null, isGestante: false, igSemanas: null, qtdConsultasPreNatal: null,
+    isMulher: false, examePreventivoUltimaAvaliacao: null, isGestante: false, dataDum: null, igSemanas: null, qtdConsultasPreNatal: null,
     isHipertenso: false, isDiabetico: false, dataUltimaHemoglobinaGlicada: null, dataUltimaConsultaHipertensao: null, dataUltimaConsultaDiabetes: null,
     isIdoso: false, isCrianca: false, qtdConsultasAte24Meses: null, dataPrimeiraConsultaInfantil: null, qtdMedicoesPesoAlturaAte24Meses: null, isSaudeBucal: false, fontes: [], atualizadoEm: Date.now(),
   };

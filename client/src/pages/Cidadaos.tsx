@@ -30,7 +30,7 @@ export function linhasResumoClinico(cidadao: Cidadao): [string, string][] {
   const eCrianca = ehCrianca(cidadao.dataNascimento, cidadao.idadeStr);
   return [
     ["Listas consolidadas", cidadao.fontes.length ? cidadao.fontes.join(" · ") : "Cadastro Geral"],
-    (ehSexoFeminino(cidadao) || cidadao.isGestante) && ["Gestação", cidadao.isGestante ? `Sim · IG ${cidadao.igSemanas ?? "não informada"} · ${cidadao.qtdConsultasPreNatal ?? 0} consulta(s)` : "Não"],
+    (ehSexoFeminino(cidadao) || cidadao.isGestante) && ["Gestação", cidadao.isGestante ? `Sim${cidadao.dataDum ? ` · DUM ${formatarData(cidadao.dataDum)}` : ""} · IG ${cidadao.igSemanas ?? "não informada"} · ${cidadao.qtdConsultasPreNatal ?? 0} consulta(s)` : "Não"],
     cidadao.isDiabetico && ["Diabetes", `Hb: ${formatarData(cidadao.dataUltimaHemoglobinaGlicada)} · consulta: ${formatarData(cidadao.dataUltimaConsultaDiabetes)}`],
     cidadao.isHipertenso && ["Hipertensão", `PA: ${formatarData(cidadao.dataUltimaMedicaoPressao)} · consulta: ${formatarData(cidadao.dataUltimaConsultaHipertensao)}`],
     cidadao.isMulher && ["Rastreamento", formatarData(cidadao.examePreventivoUltimaAvaliacao)],

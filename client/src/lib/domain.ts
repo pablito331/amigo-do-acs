@@ -44,6 +44,8 @@ export interface Cidadao {
   isMulher: boolean;
   examePreventivoUltimaAvaliacao: string | null;
   isGestante: boolean;
+  /** Data da última menstruação, informada no relatório de gestação do PEC. */
+  dataDum?: string | null;
   igSemanas: string | null;
   qtdConsultasPreNatal: number | null;
   isHipertenso: boolean;

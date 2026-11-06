@@ -63,6 +63,17 @@ describe("normalização dos CSVs do PEC", () => {
     });
   });
 
+  it("importa e exibe a DUM do relatório de gestação", async () => {
+    await Promise.all([db.cidadaos.clear(), db.importacoes.clear()]);
+    const cabecalho = "Nome;Data de nascimento;CPF;CNS;Microárea;DUM;IG (DUM) (semanas);Quantidade de atendimentos no pré-natal";
+    const carga = `Lista temática;Gestação e puerpério\nMicroárea(s);06\n${cabecalho}\nMaria da Silva;01/01/1995;123.456.789-00;-;06;01/09/2026;9 semanas e 3 dias;1`;
+
+    await importarArquivo(arquivoCsvPec(carga, "gestacao.csv"));
+
+    const maria = await db.cidadaos.where("cpf").equals("12345678900").first();
+    expect(maria).toMatchObject({ isGestante: true, dataDum: "01/09/2026", igSemanas: "9 semanas e 3 dias", qtdConsultasPreNatal: 1 });
+  });
+
   it("sinaliza no rastreador dois registros PEC com mesmo nome e nascimento, mesmo com CPF diferente", async () => {
     await Promise.all([db.cidadaos.clear(), db.importacoes.clear()]);
     const cabecalho = "Nome;Data de nascimento;CPF;CNS;Microárea;Rua;Número;Bairro";
